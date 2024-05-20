@@ -1,0 +1,42 @@
+{%- capture buy_it_with -%}
+ {%- for block in section.blocks -%}
+   {%- case block.type -%}
+     {%- when 'buy_it_with' -%}
+
+           {%- comment -%}
+     --------------------------------------------------------------------------------------------------------------------
+     PRODUCT WEAR IT WITH
+     --------------------------------------------------------------------------------------------------------------------
+     {%- endcomment -%}
+
+     {%- assign title = block.settings.title -%}
+
+       <div class="Section Section--spacingNormal">
+        {% if title != blank %}
+         <header class="SectionHeader__origin">
+          <div class="Container__buy_it_with">
+            <h3 class="SectionHeader__Heading Heading u-h11 sp__center sp__buy_it_with_mb">{{ title }}</h3>
+          </div>
+         </header>
+        {% endif %}
+
+        <div class="product_item_buy_it_with_wrapper">
+          {% assign related_products =  product.metafields.custom.related_product.value %}
+          {% for product in related_products  %}
+            {% render 'product-item-buy-it-with', product: product, use_horizontal: true, show_labels: false, show_product_info: true, show_vendor: false, show_price_on_hover: false %}
+          {% endfor %}
+        </div>
+       </div>
+
+
+   {%- endcase -%}
+ {%- endfor -%}
+{%- endcapture -%}
+
+
+{%- if buy_it_with != blank -%}
+ <div class="Product__Aside__origin">
+   <span id="ProductAside" class="Anchor"></span>
+     {{- buy_it_with -}}
+ </div>
+{%- endif -%}

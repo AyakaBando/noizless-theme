@@ -1,0 +1,303 @@
+{%- capture product_tabs -%}
+  {%- for block in section.blocks -%}
+    {%- case block.type -%}
+
+      {%- when 'product_meta' -%}
+      {%- render 'product-meta', form: form, block: block, product: product -%}
+
+      {%- when 'description_wide' -%}
+      {%- if product.description != blank -%}
+      <div class="Collapsible Collapsible--large is-pc" {{ block.shopify_attributes }}>
+        <button class="Collapsible__Button Heading u-h6" data-action="toggle-collapsible" aria-expanded="true">
+          商品説明 <span class="Collapsible__Plus"></span>
+        </button>
+
+        <div class="Collapsible__Inner">
+          <div class="Collapsible__Content">
+            
+            <div class="ProductMeta__Description" {{ block.shopify_attributes }}>
+              <div class="Rte">
+                {{- product.description | replace: 'data-section-type', 'data-section-type-placeholder' -}}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {%- endif -%}
+
+      <div class="Collapsible Collapsible--large ProductMeta__Description is-sp" {{ block.shopify_attributes }}>
+        <button class="Collapsible__Button Heading u-h6" data-action="toggle-collapsible" aria-expanded="true">
+          商品説明 <span class="Collapsible__Plus"></span>
+        </button>
+
+        <div class="Collapsible__Inner">
+          <div class="Collapsible__Content">
+            <div class="Rte">
+              {{- product.description | replace: 'data-section-type', 'data-section-type-placeholder' -}}
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      {%- when 'content' -%}
+        {%- if block.settings.page != blank -%}
+          {%- assign title = block.settings.page.title -%}
+          {%- assign content = block.settings.page.content -%}
+        {%- else -%}
+          {%- assign title = block.settings.title -%}
+          {%- assign content = block.settings.content -%}
+        {%- endif -%}
+
+        {%- if title != blank and content != blank -%}
+          <div class="Collapsible Collapsible--large" {{ block.shopify_attributes }}>
+            <button class="Collapsible__Button Heading u-h6" data-action="toggle-collapsible" aria-expanded="false">
+              {{- title -}} <span class="Collapsible__Plus"></span>
+            </button>
+
+            <div class="Collapsible__Inner">
+              <div class="Collapsible__Content">
+                <div class="Rte">
+                  {{- content -}}
+                </div>
+              </div>
+            </div>
+          </div>
+        {%- endif -%}
+
+
+        {%- when 'variant_look' -%}
+          
+        <div  id="variant_look">
+        {% for variant in product.variants %}
+          <div class="variant_look">
+              <div class="color_option_wrapper">
+                {% unless product.has_only_default_variant %}
+                  {% if variant.option1 %}
+                    {% if variant.metafields.color.value %}
+                      <span class="ColorSwatch ColorSwatch--large " style="background-color: {{ variant.metafields.color.value }};">&nbsp;</span>
+                    {% else %}
+                      <img class="variant_option_image" src={{variant.featured_image | img_url: 'small'}} />
+                    {% endif %}
+                  {% endif %}
+                {%endunless%}
+                {% if product.has_only_default_variant %}
+                  <img class="variant_option_image" src={{product.featured_image | img_url: 'small'}}/>
+                {% endif %}
+
+                
+                <div class="option_wrapper">
+                  {% unless product.has_only_default_variant %}
+                    {% if variant.option1 %}
+                    <span class="u-h9">{{ variant.option1 }}</span>
+                    {% endif %}
+                  {%endunless%}
+                  {% if product.has_only_default_variant %}
+                    <span class="u-h9">{{ product.title }}</span>
+                  {%endif%}
+                  
+                  {% if variant.option2 %}
+                  <span class="u-h9"> - {{ variant.option2 }}</span>
+                  {% endif %}
+                  
+                  {% if variant.option3 %}
+                  <span class="u-h9"> - {{ variant.option3 }}</span>
+                  {% endif %}
+
+                  {%- if variant.sku != blank -%}
+                    <div class="u-h9">
+                      {{variant.sku}}
+                    </div>
+                  {%- endif -%}
+                  
+                  <div class="u-h9">
+                    {%- if product.metafields.custom.open_price == true  -%}
+                      オープン価格
+                    {%- else -%}
+                      {{ variant.price | money }}
+                      {% if variant.metafields.custom.price_info %}{{variant.metafields.custom.price_info}}{% endif %}<span class="u-h12"> (税込)</span>
+                    {%- endif -%}
+                  </div>
+                </div>
+              </div>
+              
+
+              <!-- Swym Wishlist Plus EPI Button-->
+              {% comment %} <label for="{{variant.id}}" class="wish-list-button">
+                <button id="{{variant.id}}" data-with-epi="true" class="swym-hear-custom-look swym-button swym-add-to-wishlist-view-product product_{{product.id}}" data-swaction="addToWishlist" data-product-id="{{product.id | json}}" data-variant-id="{{variant.id}}" data-product-url="{{ shop.url }}{{ product.url }}" style="position:relative"></button>
+                <span class="u-h10">お気に入りに追加</span>
+              </label> {% endcomment %}
+             <!-- Swym Wishlist Plus EPI Button-->
+
+            {% comment %} Wishlist Button {% endcomment %}
+
+            
+
+            <label for="wishlist_{{ variant.id }}" class="wish-list-button u-h10">
+              <button
+                id="wishlist_{{ variant.id }}"
+                class="wishlist-button add-to-wishlist"
+                data-variant-id="{{ variant.id }}"
+                data-product-id="{{ product.id }}"
+                data-variant-title="{{ variant.title }}"
+                data-variant-price="{{ variant.price }}"
+                data-variant-sku="{{ variant.sku }}"
+                data-variant-image="{{variant.featured_image | img_url: 'medium' }}"
+                data-variant-custom-common-name="{{ product.metafields.custom.common_name }}"
+                data-product-company-name="{{ product.metafields.custom._maker_itempage_name }}"
+                data-product-name="{{ product.title }}"
+                data-product-size="{{ variant.size }}"
+                data-variant-size="{{variant.metafields.custom.size}}"
+                data-prodcut-category="{{ product.category }}"
+                data-product-manufacturer-url="{{ product.manufacturer-url }}"
+                data-product-manufaturer-name="{{ product.manufacturer-name }}"
+                data-product-contact-number="{{ product.contact-number }}"
+                data-product-details="{{ product.custom.details }}"
+                data-product-type="{{ product.type }}"
+                data-product-price-info="{{ variant.price }}"
+                data-custom-attribute="custom-value"
+              >
+                <div class="svg-wrapper">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart" viewBox="0 0 16 16" style="color: #fff;">
+                    <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z"/>
+                  </svg>
+                </div>
+              </button>
+              <span class="u-h10">お気に入りに追加</span>
+            </label>
+            
+             {% comment %} End Wishlist Button {% endcomment %}
+          </div>
+        {% endfor %}
+        </div>
+      
+        {%- when 'variant_selector' -%}
+        {%- assign has_ouputted_variant_selector = true -%}
+        {%- render 'product-form', block: block, product: product -%}
+
+      {%- when 'quantity_selector' -%}
+        <div class="ProductForm__QuantitySelector" {{ block.shopify_attributes }}>
+          {%- if block.settings.show_label -%}
+            <span class="ProductForm__Label">{{ 'product.form.quantity' | t }}:</span>
+          {%- endif -%}
+
+          <div class="QuantitySelector QuantitySelector--large">
+            {%- assign quantity_minus_one = line_item.quantity | minus: 1 -%}
+
+            <button type="button" class="QuantitySelector__Button Link Link--secondary" data-action="decrease-quantity">{% render 'icon' with 'minus' %}</button>
+            <input type="text" class="QuantitySelector__CurrentQuantity" pattern="[0-9]*" name="quantity" value="1" aria-label="{{ 'product.form.quantity' | t }}">
+            <button type="button" class="QuantitySelector__Button Link Link--secondary" data-action="increase-quantity">{% render 'icon' with 'plus' %}</button>
+          </div>
+        </div>
+
+      {%- when 'inventory' -%}
+        {%- assign hide_inventory_quantity_by_default = false -%}
+
+        {%- if product.selected_or_first_available_variant.inventory_management == blank or product.selected_or_first_available_variant.inventory_quantity <= 0 -%}
+          {%- assign hide_inventory_quantity_by_default = true -%}
+        {%- endif -%}
+
+        {%- if block.settings.inventory_quantity_threshold != 0 and product.selected_or_first_available_variant.inventory_quantity > block.settings.inventory_quantity_threshold -%}
+          {%- assign hide_inventory_quantity_by_default = true -%}
+        {%- endif -%}
+
+        <p class="ProductForm__Inventory Text--subdued" {% if hide_inventory_quantity_by_default %}style="display: none"{% endif %} {{ block.shopify_attributes }}>
+          {%- if block.settings.inventory_quantity_threshold == 0 -%}
+            {{- 'product.form.inventory_quantity_count' | t: count: product.selected_or_first_available_variant.inventory_quantity -}}
+          {%- else -%}
+            {{- 'product.form.low_inventory_quantity_count' | t: count: product.selected_or_first_available_variant.inventory_quantity -}}
+          {%- endif -%}
+        </p>
+
+      {%- when 'buy_buttons' -%}
+        {%- if block.settings.show_payment_button == false or product.selling_plan_groups.size > 0 -%}
+          {%- assign use_primary_button = true -%}
+        {%- else -%}
+          {%- assign use_primary_button = false -%}
+        {%- endif -%}
+
+        <div class="ProductForm__BuyButtons" {{ block.shopify_attributes }}>
+          {%- if block.settings.show_payment_button and product.selected_or_first_available_variant.available == false -%}
+            <style>
+              #shopify-section-{{ section.id }} .shopify-payment-button {
+                display: none;
+              }
+            </style>
+          {%- endif -%}
+
+          <button type="submit" data-use-primary-button="{% if use_primary_button %}true{% else %}false{% endif %}" class="ProductForm__AddToCart Button {% if product.selected_or_first_available_variant.available and use_primary_button %}Button--primary{% else %}Button--secondary{% endif %} Button--full" {% if product.selected_or_first_available_variant.available %}data-action="add-to-cart"{% else %}disabled="disabled"{% endif %}>
+            {%- if product.selected_or_first_available_variant.available -%}
+              <span>{% if product.template_suffix == 'pre-order' %}{{ 'product.form.pre_order' | t }}{% else %}{{ 'product.form.add_to_cart' | t }}{% endif %}</span>
+
+              {%- if block.settings.show_price_in_button -%}
+                <span class="Button__SeparatorDot"></span>
+                <span>{{ product.selected_or_first_available_variant.price | money }}</span>
+              {%- endif -%}
+            {%- else -%}
+              {{- 'product.form.sold_out' | t -}}
+            {%- endif -%}
+          </button>
+
+          {%- if block.settings.show_payment_button and product.template_suffix != 'pre-order' -%}
+            {{ form | payment_button }}
+          {%- endif -%}
+        </div>
+
+      {%- when 'store_pickup' -%}
+        {%- comment -%}The availability container will be added automatically if there is store pickup available{%- endcomment -%}
+        <div class="ProductMeta__StoreAvailabilityContainer" {{ block.shopify_attributes }}></div>
+
+
+        {%- when 'share_buttons' -%}
+        <div class="ProductMeta__ShareButtons hidden-pocket" {{ block.shopify_attributes }}>
+          <span class="ProductMeta__ShareTitle Heading Text--subdued u-h9">{{ 'product.form.share' | t }}</span>
+
+          {%- assign share_url = shop.url | append: product.url -%}
+          {%- assign twitter_text = product.title -%}
+          {%- assign pinterest_description = product.description | strip_html | truncatewords: 15 | url_param_escape -%}
+          {%- assign pinterest_image = product.featured_image | img_url: 'large' | prepend: 'https:' -%}
+
+          <div class="ProductMeta__ShareList Text--subdued">
+            <a class="ProductMeta__ShareItem" href="https://www.facebook.com/sharer.php?u={{ share_url }}" target="_blank" rel="noopener" aria-label="Facebook">{%- render 'icon' with 'facebook' -%}</a>
+            <a class="ProductMeta__ShareItem" href="https://twitter.com/share?{% if twitter_text != blank %}text={{twitter_text}}&{% endif %}url={{ share_url }}" target="_blank" rel="noopener" aria-label="Twitter">{%- render 'icon' with 'twitter' -%}</a>
+            <a class="ProductMeta__ShareItem" href="https://pinterest.com/pin/create/button/?url={{ share_url }}{% if pinterest_image != blank %}&media={{ pinterest_image }}{% endif %}&description={{ pinterest_description }}" target="_blank" rel="noopener" aria-label="Pinterest">{%- render 'icon' with 'pinterest' -%}</a>
+          </div>
+        </div>
+
+        {%- when 'liquid' -%}
+        {%- if block.settings.liquid != blank -%}
+          <div class="ProductMeta__Text" {{ block.shopify_attributes }}>
+            {{ block.settings.liquid }}
+          </div>
+        {%- endif -%}
+
+        {%- when 'text' -%}
+        {%- if block.settings.text != blank -%}
+          <div class="ProductMeta__Text" {{ block.shopify_attributes }}>
+            {{- block.settings.text -}}
+          </div>
+        {%- endif -%}
+
+
+      {%- when 'reviews' -%}
+        <div class="Collapsible Collapsible--large" {{ block.shopify_attributes }}>
+          <button class="Collapsible__Button Heading u-h6" data-action="toggle-collapsible" aria-expanded="false">
+            <span>{{ 'product.tabs.reviews' | t }} <span class="text--light">({{ product.metafields.reviews.rating_count.value | default: 0 }})</span></span>
+            <span class="Collapsible__Plus"></span>
+          </button>
+
+          <div class="Collapsible__Inner">
+            <div class="Collapsible__Content">
+              <div id="shopify-product-reviews" data-id="{{product.id}}">{{ product.metafields.spr.reviews }}</div>
+            </div>
+          </div>
+        </div>
+    {%- endcase -%}
+  {%- endfor -%}
+{%- endcapture -%}
+
+{%- if product_tabs != blank -%}
+  <div class="Product__Tabs">
+    {{- product_tabs -}}
+  </div>
+{%- endif -%}

@@ -1,0 +1,80 @@
+{%- capture boost_pfs_layout -%}
+  {%- case layout -%}
+
+    {%- when 'productGridItemHtml' -%}
+      {% raw %}
+        <div id="easyModal--{{itemId}}" class="c-swym-button__modal">
+          <div class="c-swym-button__modal-content">
+            <div class="c-swym-button__modal-header">
+              <span class="modal-title">お気に入りに追加</span>
+              <span class="modalClose" id="easyModalClose--{{itemId}}">×</span>
+            </div>
+            <div class="c-swym-button__modal-body">
+              {{modalContent}}
+            </div>
+          </div>
+        </div>
+        <div class="Grid__Cell 1/{{mobile_items_per_row}}--phone 1/{{tablet_items_per_row}}--tablet-and-up 1/{{desktop_items_per_row}}--{{filter_position_class}}">
+          <div class="ProductItem {{horizontal_class}}" style="visibility: inherit; opacity: 1;">
+            <!-- Swym Wishlist Plus EPI Button-->
+            <div class="ProductItem__Wrapper ok">
+              {{itemWishlist}}
+              <button type="button" class="c-swym-button__open-modal swym-button swym-add-to-wishlist-view-product product_{{itemId}}" data-product_id="{{itemId}}" onclick="openWishlistModal('easyModal--{{itemId}}','easyModalClose--{{itemId}}')"></button>
+              <a href="{{itemUrl}}" class="ProductItem__ImageWrapper {{has_alternate_image_class}}">
+                <div class="AspectRatio AspectRatio--{{use_natural_size_class}}" style="max-width: {{max_width}}px; {{padding_bottom}} --aspect-ratio: {{media_aspect_ratio}}">
+                  {{alternate_image}}
+
+                  <img class="ProductItem__Image Image--lazyLoad Image--fadeIn" data-src="{{image_url}}" data-widths="[{{supported_sizes}}]" data-sizes="auto" alt="{{product.title}}" data-media-id="{{featured_media_id}}"/>
+                  <span class="Image__Loader"></span>
+
+                  <noscript>
+                    <img class="ProductItem__Image ProductItem__Image--alternate" src="{{product_media1_url}}" alt="{{product.title}}"/>
+                    <img class="ProductItem__Image" src="{{featured_media_url}}" alt="{{product.title}}"/>
+                  </noscript>
+                </div>
+              </a>
+              {{product_labels}}
+              {{product_info}}
+            </div>
+
+            {{view_product}}
+          </div>
+        </div>
+      {% endraw %}
+
+    {%- when 'paginateHtml' -%}
+      <div class="Pagination Text--subdued">
+        <div class="Pagination__Nav">[[previous]][[pageItems]][[next]]</div>
+      </div>
+
+    {%- when 'previousActiveHtml' -%}
+      <a class="Pagination__NavItem Link Link--primary" rel="prev" title="{{ 'general.pagination.previous_page' | t }}" href="[[itemUrl]]">
+        {%- render 'icon' with 'select-arrow-left' -%}
+      </a>
+
+    {%- when 'previousDisabledHtml' -%}
+
+    {%- when 'nextActiveHtml' -%}
+      <a class="Pagination__NavItem Link Link--primary" rel="next" title="{{ 'general.pagination.next_page' | t }}" href="[[itemUrl]]">
+        {%- render 'icon' with 'select-arrow-right' -%}
+      </a>
+
+    {%- when 'nextDisabledHtml' -%}
+
+    {%- when 'pageItemHtml' -%}
+      <a class="Pagination__NavItem Link Link--primary" href="[[itemUrl]]" title="[[itemTitle]]">[[itemTitle]]</a>
+
+    {%- when 'pageItemSelectedHtml' -%}
+      <span class="Pagination__NavItem is-active">[[itemTitle]]</span>
+
+    {%- when 'pageItemRemainHtml' -%}
+      <span class="Pagination__NavItem">[[itemTitle]]</span>
+
+    {%- when 'sortingHtml' -%}
+      [[sortingItems]]
+
+  {%- endcase -%}
+
+{%-  endcapture -%}
+{%- assign str = '}}' -%}
+{{- boost_pfs_layout | json | replace: '[[', '{{' | replace: ']]', str -}}

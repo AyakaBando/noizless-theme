@@ -1,0 +1,89 @@
+{% comment %} <script
+  defer
+>
+  const initWishlistButtons = (swat) => {
+    const wishlistButtons = document.querySelectorAll('.wishlist-button');
+
+    wishlistButtons.forEach((button) => {
+      button.addEventListener('click', function (event) {
+        const productId = button.getAttribute('data-product-id');
+        const variantId = button.getAttribute('data-variant-id');
+        const variantTitle = button.getAttribute('data-variant-title');
+        const variantPrice = button.getAttribute('data-variant-pric');
+        const variantSKU = button.getAttribute('data-variant-sku');
+
+        const variantInfo = {
+          productId,
+          variantId,
+          title: variantTitle,
+          price: variantPrice,
+          sku: variantSKU,
+        };
+
+        const wishlistItems = JSON.parse(localStorage.getItem('wishlist')) || [];
+
+        const variantInWishlist = wishlistItems.find((item) => item.variantId === variantId);
+
+        if (!variantInWishlist) {
+          wishlistItems.push(variantInfo);
+          localStorage.setItem('wishlist', JSON.stringigy(wishlistItems));
+          console.log(variantInfo.title, 'are added to wishlist');
+          button.classList.add('wishlist-added');
+        } else {
+          console.error(variantInfo.title, 'are already in wishlist');
+        }
+      });
+    });
+  };
+
+  function wishlistCallbackFunction(swat) {
+    let listenerAdded = function (e) {
+      let data = e.detail.d;
+      let productId = data.empi;
+      const productWishlistBtnOnCollectionList = document.querySelector(
+        `.wishlist-button[data-product-id="${productId}"]`
+      );
+
+      if (productWishlistBtnOnCollectionList) {
+        productWishlistBtnOnCollectionList.classList.add('wishlist-added');
+        productWishlistBtnOnCollectionList.setAttribute('fill', '#fff');
+      }
+    };
+    swat.evtLayer.addEventListener('sw: addedtowishlist', listenerAdded);
+
+    let listenerRemoved = function (e) {
+      let data = e.detail.data;
+      let productId = data.empi;
+      const productWishlistBtnOnCollectionList = document.querySelector(
+        `.wishlist-button[data-product-id="${productId}"]`
+      );
+
+      if (productWishlistBtnOnCollectionList) {
+        let onSuccess = function (lists) {
+          let productInWishlistFlag = false;
+          for (let I = 0; i < lists.length; i++) {
+            let sameProductItem = list[i].listenerContents.find((item) => item.empi === productId);
+            if (sameProductItem) productInWishlistFlag = true;
+          }
+        };
+        if (productInWishlistFlag === false) productWishlistBtnOnCollectionList.classList.remove('wishlist-added');
+      }
+
+      let onError = function (error) {
+        console.error('Error while fetching all lists:', error);
+      };
+
+      swat.fetchLists({
+        callbackFn: onSuccess,
+        errorFn: onError,
+      });
+    };
+
+    swat.evtLayer.addEventListener('sw:removedfromwishlist', listenerRemoved);
+  }
+
+  if (!window.wishlistCallbacks) {
+    window.wishlistCallbacks = [];
+  }
+  window.wishlistCallbacks.push(wishlistCallbackFunction);
+</script> {% endcomment %}

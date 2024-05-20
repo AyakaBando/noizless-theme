@@ -1,0 +1,201 @@
+<div id="section-{{ section.id }}" class="Section" data-section-id="{{ section.id }}" data-section-type="article-list">
+  {%- if blog.articles_count == 0 -%}
+    <div class="EmptyState">
+      <div class="Container">
+        <h1 class="EmptyState__Title Heading u-h5">{{ 'blog.general.no_articles' | t: blog_title: blog.title }}</h1>
+        <a href="{{ routes.root_url }}" class="EmptyState__Action Button Button--primary">{{ 'blog.general.empty_button' | t }}</a>
+      </div>
+    </div>
+  {%- else -%}
+    <div class="Blog">
+      {%- comment -%}Top Image{%- endcomment -%}
+      {%- capture slide_content -%}
+        {%- comment -%}
+          Implementation note: this is an art driven image selection so it would have been better to be able to use the "picture" tag instead. However,
+          as the mobile and desktop image could have different aspect ratio, the image allocation space would not have work properly without explicitly
+          distinguishing the two images, hence the two containers.
+        {%- endcomment -%}
+
+        {%- assign mobile_image = section.settings.mobile_image | default: section.settings.image -%}
+
+        {%- if mobile_image -%}
+          <div class="hidden-tablet-and-up"
+              style="--aspect-ratio: {{ mobile_image.aspect_ratio }}; background-image: url({{ mobile_image | img_url: '1x1', format: 'jpg' }})">
+              <img class="Image--lazyLoad"
+                  src="{{ mobile_image | img_url: '1x1' }}"
+                  data-src="{{ mobile_image | img_url: 'x800' }}"
+                  alt="{{ mobile_image.alt | escape }}">
+
+              <noscript>
+                <img src="{{ mobile_image | img_url: 'x800' }}" alt="{{ mobile_image.alt | escape }}">
+              </noscript>
+          </div>
+        {%- endif -%}
+
+        {%- if section.settings.image -%}
+          <div class="hidden-phone"
+              style="--aspect-ratio: {{ section.settings.image.aspect_ratio }}; background-image: url({{ section.settings.image | img_url: '1x1', format: 'jpg' }})">
+            {% assign image_url = section.settings.image | img_url: '1x1' | replace: '_1x1.', '_{width}x.' %}
+
+            <img class="Image--lazyLoad"
+                data-src="{{ image_url }}"
+                data-optimumx="1.2"
+                data-widths="[400, 600, 800, 1000, 1200, 1400, 1600, 1800, 2000, 2200]"
+                data-sizes="auto"
+                alt="{{ section.settings.image.alt | escape }}">
+
+            <noscript>
+              <img src="{{ section.settings.image | img_url: '1000x' }}" alt="{{ section.settings.image.alt | escape }}">
+            </noscript>
+          </div>
+        {%- else -%}
+          <div class="Slideshow__ImageContainer PlaceholderSvg--dark">
+            {%- capture placeholder -%}{% cycle 'lifestyle-1', 'lifestyle-2' %}{%- endcapture -%}
+            {{ placeholder | placeholder_svg_tag: 'PlaceholderBackground__Svg' }}
+          </div>
+        {%- endif -%}
+
+        {%- if current_tags != blank -%}
+          <h2 class="SectionHeader__Heading SectionHeader__Heading--emphasize Heading u-h4 slideshow-text">{{ current_tags }}</h2>
+        {% else %}
+          <h2 class="SectionHeader__Heading SectionHeader__Heading--emphasize Heading u-h4 slideshow-text">{{ 'blog.general.all_tag' | t }}</h2> 
+        {%- endif -%}
+      {%- endcapture -%}
+
+      <div class="Container">
+        <header class="PageHeader">
+          <div class="SectionHeader SectionHeader--center">
+            <h1 class="SectionHeader__Heading Heading u-h1" {% unless section.settings.show_title %}hidden{% endunless %}>
+              {{- blog.title -}}
+
+              {%- if section.settings.show_rss -%}
+                <a href="{{ blog.url }}.atom" target="_blank" class="Blog__RssLink Link Link--secondary">{% render 'icon' with 'rss' %}</a>
+              {%- endif -%}
+            </h1>
+
+            {%- if section.settings.show_tags and blog.all_tags.size > 0 -%}
+              <ul class="Blog__TagList HorizontalList">
+                <li class="HorizontalList__Item">
+                  <a href="/blogs/{{ blog.handle }}" class="Heading Link Link--primary Text--subdued u-h8 {% if current_tags == blank %}is-active{% endif %}">{{ 'blog.general.all_tag' | t }}</a>
+                </li>
+
+                {%- for tag in blog.all_tags -%}
+                  <li class="HorizontalList__Item">
+                    <a href="/blogs/{{ blog.handle }}/tagged/{{ tag | handle }}" class="Heading Link Link--primary Text--subdued u-h8 {% if current_tags contains tag %}is-active{% endif %}">{{ tag }}</a>
+                  </li>
+                {%- endfor -%}
+              </ul>
+            {%- endif -%}
+          </div>
+        </header>
+
+        {%- if section.settings.show_featured_article -%}
+          {%- assign articles_per_page = 16 -%}
+        {%- else -%}
+          {%- assign articles_per_page = 12 -%}
+        {%- endif -%}
+
+        {%- paginate blog.articles by articles_per_page -%}
+          {% assign is_first_article_featured = false %}
+
+          {%- if section.settings.show_featured_article and blog.articles.first.image -%}
+            {%- assign is_first_article_featured = true -%}
+          {%- endif -%}
+
+          <div class="ArticleListWrapper">
+            <div class="ArticleList {% if is_first_article_featured %}ArticleList--withFeatured{% endif %} Grid Grid--m">
+              {%- for article in blog.articles -%}
+                <div class="Grid__Cell {% if is_first_article_featured and forloop.first %}c-Is-First{% else %}1/2--tablet 1/3--lap-and-up{% endif %}">
+                  {%- render 'article-item', article: article, is_first_article_featured:is_first_article_featured ,forloop_first:forloop.first -%}
+                </div>
+              {%- endfor -%}
+            </div>
+          </div>
+
+          {%- render 'pagination', paginate: paginate -%}
+        {%- endpaginate -%}
+      </div>
+    </div>
+  {%- endif -%}
+</div>
+
+<style>
+  #section-{{ section.id }} .ImageHero,
+  #section-{{ section.id }} .ImageHero .Heading {
+    color: #ffffff;
+  }
+
+  #section-{{ section.id }} .ImageHero .Button {
+    color: #1c1c1c;
+    border-color: #ffffff;
+  }
+
+  #section-{{ section.id }} .ImageHero .Button::before {
+    background-color: #ffffff;
+  }
+
+  {%- if settings.show_button_transition -%}
+    @media (-moz-touch-enabled: 0), (hover: hover) {
+      #section-{{ section.id }} .ImageHero .Button:hover {
+        color: #ffffff;
+      }
+    }
+  {%- endif -%}
+</style>
+
+{% schema %}
+{
+  "name": "Blog page",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image",
+      "info": "1800 x 800px .jpg recommended"
+    },
+    {
+      "type": "image_picker",
+      "id": "mobile_image",
+      "label": "Mobile image",
+      "info": "750 x 1100px .jpg recommended. If none is set, desktop image will be cropped."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_rss",
+      "label": "Show RSS",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_title",
+      "label": "Show blog title",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_tags",
+      "label": "Show filters",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_featured_article",
+      "label": "Show featured article",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_category",
+      "label": "Show article category",
+      "info": "The first article's tag is used as the main category.",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_date",
+      "label": "Show article published date",
+      "default": true
+    }
+  ]
+}
+{% endschema %}

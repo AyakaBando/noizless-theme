@@ -1,0 +1,151 @@
+<section class="Section Section--spacingNormal" id="section-{{ section.id }}" data-section-type="article-list" data-section-id="{{ section.id }}">
+    {% if section.settings.section_title != blank %}
+        <div class="section__title">
+          <h2 class="SectionHeader__Heading Heading_catch u-h1">{{ section.settings.section_title }}</h2>
+        </div>
+      {% endif %}
+      <div class="Container">
+        <div class="ArticleListWrapper">
+            <div class="ArticleList Grid Grid--m Grid--center way-to-list">
+                {%- for block in section.blocks -%}
+                <div class="Grid__Cell 1/2--tablet 1/3--lap-and-up way-to-item">
+                  <article class="ArticleItem">
+                    {% if block.settings.image != blank %}
+                    <div class="ArticleItem__ImageWrapper AspectRatio way-to-image" style="--aspect-ratio: 1.6">
+                        <img src="{{ block.settings.image | img_url: '600x' }}" alt="{{ block.settings.image.alt | escape }}" class="ArticleItem__Image Image--fadeIn lazyautosizes Image--lazyLoaded">
+                    </div>
+                    {% endif %}
+
+                  </article>
+        
+                      <div class="ArticleItem__Content Grid--center">
+                          <span class="ArticleItem__Category Number--bold u-h16 Text--subdued way-to-step">{{ block.settings.step_text }}</span>
+        
+                        <h2 class="ArticleItem__Title Number--bold u-h15 way-to-number">
+                          <a href="#">{{ block.settings.number_text }}</a>
+                        </h2>
+        
+                        <p class="ArticleItem__Excerpt u-h17">{{ block.settings.item_text }}</p>
+        
+                      </div>
+        
+                </div>
+                {% endfor %}
+
+            </div>
+
+        </div>
+        {%- if section.settings.button_text != blank -%}
+        <div class="SectionFooter">
+          <a href="{{ section.settings.button_link }}" class="Button Button--primary">{{ section.settings.button_text | escape }}
+            {% render 'allow.svg' %}
+          </a>
+        </div>
+      {%- endif -%}  
+
+      </div>
+
+</section>    
+
+<style>
+  .way-to-list {
+    margin-left: -20px;
+  }
+
+  .way-to-item {
+    padding-left: 0 !important;
+  }
+
+  .way-to-item + .way-to-item {
+    border-left: 1px solid rgba(88, 87, 85, 0.5);
+  }
+
+  .way-to-image {
+    max-width: 236px;
+  }
+
+  .way-to-step {
+    font-family: 'Times New Roman', Times, serif;
+    margin-bottom: 0;
+  }
+  
+  .way-to-number {
+    line-height: 55px;
+    margin-bottom: 25px;
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Way to use",
+  "class": "shopify-section--bordered",
+  "max_blocks": 3,
+  "settings": [
+    {
+      "type": "text",
+      "id": "section_title",
+      "label": "Section-heading",
+      "default": "Section-heading"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Sub-heading"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button text",
+      "default": "View all articles"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "item",
+      "name": "item",
+      "settings": [
+      {
+        "type": "image_picker",
+        "id": "image",
+        "label": "Image"
+      },
+      {
+        "type": "text",
+        "id": "step_text",
+        "label": "Step text",
+        "default": "step"
+      },
+      {
+        "type": "text",
+        "id": "number_text",
+        "label": "Number text",
+        "default": "01"
+      },
+      {
+        "type": "text",
+        "id": "item_text",
+        "label": "text"
+      }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Way to use",
+      "settings": {},
+      "blocks": [
+      ]
+    }
+  ]
+}
+{% endschema %}

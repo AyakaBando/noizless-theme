@@ -1,0 +1,17 @@
+{% assign wishlistItems = '' %}
+{% if customer %}
+  {% assign wishlistItems = customer.metafields.global.wishlist | split: ',' %}
+{% else %}
+  {% assign wishlistItems = ' ' %}
+{% endif %}
+
+<div class="wishlist-items-container">
+  {% for product_id in wishlistItems %}
+    {% assign product = all_products[product_id] %}
+    {% if product %}
+      <div class="wishlist-item">
+        <h3>{{ product.title }}</h3>
+      </div>
+    {% endif %}
+  {% endfor %}
+</div>

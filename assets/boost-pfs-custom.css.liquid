@@ -1,0 +1,269 @@
+/*********************** Custom CSS for Boost Filter & Search  ************************/
+{% assign breakpointMobile = '767px' %}
+{% assign breakpointTabletMin = '768px' %}
+{% assign breakpointTabletMax = '1199px' %}
+{% assign breakpointDesktop = '1200px' %}
+{% assign searchBoxMobileHeight = '64px' %}
+
+/**************************** Place your custom css below  ****************************/
+.boost-pfs-product-no-search-result-title h2 {
+  background: var(--background);
+}
+.boost-pfs-search-no-result-body .CollectionToolbar--top {
+  display: none;
+}
+.boost-pfs-most-popular-wrapper {
+  padding-left: 50px;
+  padding-right: 50px;
+}
+@media (max-width: {{breakpointMobile}}) {
+  .boost-pfs-most-popular-wrapper {
+    padding-left: 30px;
+    padding-right: 30px;
+  }
+	#boost-pfs-filter-products .ProductItem {
+		visibility: inherit !important;
+	}
+}
+.boost-pfs-filter-option .boost-pfs-filter-option-title .boost-pfs-filter-clear {
+	margin-right: 25px;
+}
+
+.boost-pfs-filter-tree-v .boost-pfs-filter-option .boost-pfs-filter-option-title .boost-pfs-filter-option-title-heading > span:before {
+	border: none;
+	content: "-";
+	font-size: 40px;
+	position: absolute;
+	right: 6px;
+	top: -4px;
+}
+
+.boost-pfs-filter-tree-v .boost-pfs-filter-option.boost-pfs-filter-option-collapsed .boost-pfs-filter-option-title .boost-pfs-filter-option-title-heading > span:before {
+	content: "+";
+	right: 6px;
+	top: 0;
+	font-size: 25px;
+}
+
+.boost-pfs-filter-tree-v .boost-pfs-filter-option .boost-pfs-filter-option-title .boost-pfs-filter-option-title-heading {
+	color: #262726;
+	font-size: 14px;
+	font-weight: 500;
+	text-transform: capitalize;
+}
+
+.boost-pfs-filter-option .boost-pfs-filter-option-title {
+	position: relative;
+}
+
+.boost-pfs-filter-option .boost-pfs-filter-option-content {
+	color: #939393;
+}
+
+.boost-pfs-filter-products.ProductList--grid .ProductItem {
+	visibility: visible !important;
+}
+
+.boost-pfs-in-collection-search {
+	padding: 0 10px;
+  	margin-bottom: 20px;
+}
+
+.PageHeader {
+	margin: 30px 0;
+}
+
+/* Search style */
+.boost-pfs-search-box {
+	box-shadow: none !important;
+}
+
+@media (max-width: {{breakpointMobile}}) {
+	.boost-pfs-search-suggestion-wrapper, .boost-pfs-search-suggestion {
+		left: 0px !important;
+		width: 100vw !important;
+	}
+}
+/* Filter mobile style */
+/**** Custom Search result toolbar ****/
+.boost-pfs-search-result-toolbar {
+	display: flex;
+	align-items: center;
+	margin: 35px 0 0;
+	border-top: 1px solid #cfcfcf;
+	border-bottom: 1px solid #cfcfcf;
+	white-space: nowrap;
+}
+.boost-pfs-search-result-toolbar .boost-pfs-search-result-item:first-child {
+	flex: auto;
+}
+.boost-pfs-search-result-toolbar .boost-pfs-search-result-panel-controls {
+	padding: 13px 0;
+	margin: 0;
+}
+@media (max-width: {{breakpointMobile}}) {
+	.boost-pfs-search-result-toolbar .boost-pfs-search-totlal-result {
+		display: none;
+	}
+  .boost-pfs-search-suggestion-mobile-style2 {
+    width: calc(100% - 20px);
+  }
+}
+
+.boost-pfs-search-result-wrap {
+	margin-top: 50px;
+}
+.boost-pfs-search-result-wrap .boost-pfs-search-result-list-item {
+	border-color: #cfcfcf;
+}
+
+.template-collection .boost-pfs-filter-tree-mobile-button button {
+  background: none;
+  color: inherit;
+  padding: 0;
+  margin: 0;
+}
+
+.boost-pfs-search-suggestion-wrapper {
+  position: fixed;
+}
+@media (min-width: 768px) {
+  .boost-pfs-filter-tree-desktop-button {
+    padding-top: 20px;
+    padding-bottom: 12px;
+    margin-top: 0;
+  }
+}
+
+.boost-pfs-variants-display [data-section-type="recently-viewed-products"] {
+	display: none !important;
+}
+.boost-pfs-filter-products .swym-button.swym-add-to-wishlist-view-product:not(.swym-loaded){
+		display: none;
+}
+.swym-button.swym-add-to-wishlist-view-product {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+.ProductItem__ImageWrapper  {
+  position: relative;
+}
+.swym-button.swym-add-to-wishlist-view-product.swym-heart:after {
+  content: "";
+  /* border: 1px solid #70706B; */
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  padding: 4px;
+}
+@media screen and (max-width: 767px) {
+	.Product__Info .swym-button.swym-add-to-wishlist-view-product.swym-heart:after {
+		width: 20px;
+		height: 20px;
+	  }	  
+}
+
+.venderLabel_wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/*  */
+
+  .swym-button.swym-add-to-wishlist-view-product.swym-heart {
+    position: absolute;
+    z-index: 10;
+    bottom: auto !important;
+    left: auto !important;
+    right: 0px;
+    top: 0px;
+    width: 36px;
+    height: 36px;
+  }
+
+  @media screen and (max-width: 767px) {
+    .swym-button.swym-add-to-wishlist-view-product.swym-heart {
+      width: 20px;
+      height: 20px;
+      top: 10px;
+      right: 10px;
+    }
+
+    .Product__Info .swym-button.swym-add-to-wishlist-view-product.swym-heart {
+      width: 20px;
+      height: 20px;
+      top: 3px;
+      right: 3px;
+    }
+  }
+
+
+  .CollectionInner__Products .swym-button.swym-add-to-wishlist-view-product.swym-heart {
+    position: absolute;
+    z-index: 10;
+    bottom: auto !important;
+    left: auto !important;
+    right: 0px;
+    top: 0px;
+    width: 36px;
+    height: 36px;
+  }
+
+  .ShopTheLook__ProductItem .swym-button.swym-add-to-wishlist-view-product.swym-heart {
+    position: absolute;
+    z-index: 10;
+    bottom: auto !important;
+    left: auto !important;
+    right: 0px;
+    top: 0px;
+    width: 36px;
+    height: 36px;
+  }
+  @media screen and (max-width: 767px) {
+    .Product__Aside .swym-button.swym-add-to-wishlist-view-product.swym-heart {
+      top: 6px;
+      right: 141px;
+    }
+  }
+
+  .swym-button.swym-add-to-wishlist-view-product:not(.swym-loaded) {
+    display: block !important;
+  }
+
+  .swym-button.swym-add-to-wishlist-view-product {
+    position: absolute;
+    z-index: 10;
+    bottom: auto !important;
+    left: auto !important;
+    right: 10px;
+    top: 10px;
+  }
+
+  .ProductItem__ImageWrapper .swym-add-to-wishlist-view-product:after {
+    color: #70706B !important;
+    background: #fff;
+    /* border: 1px solid #70706B; */
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    padding: 4px;
+    display: none;
+  }
+  @media screen and (max-width: 767px) {
+    .ProductItem__ImageWrapper .swym-add-to-wishlist-view-product:after {
+      padding: 2px;
+    }
+  }
+
+
+  .ProductItem__ImageWrapper .swym-added.swym-add-to-wishlist-view-product:after {
+    color: #468E7D !important;
+    background: #fff;
+    opacity: 1;
+  }
+
+  .swym-button.swym-add-to-wishlist-view-product.swym-added {
+    opacity: 1 !important;
+  }

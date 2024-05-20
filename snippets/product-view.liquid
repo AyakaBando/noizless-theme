@@ -1,0 +1,39 @@
+{%- if product -%}
+  <script class="product-view-snippet">
+    ['wishlistViewProducts', 'wishlistWatchProducts', 'wishlistProductVariants'].forEach(function(k){
+      if(!window[k]) window[k] = {};
+    });
+    (function(et){
+        let collections = {{product.type | json}};
+        let o={}, empi={{ product.id | json }},
+        piu = {{ product.featured_image | img_url: '620x620' | json }};
+        {% assign currentVariant = product.variants[0] %}
+        {% for variant in product.variants %}
+        {% if variant.selected %}
+        {% assign currentVariant = variant %}
+        {% endif %}
+        wishlistProductVariants[{{variant.id|json}}] = {
+          empi:empi,epi:{{variant.id|json}},
+          du:"{{ shop.url }}{{ product.url }}",
+          dt:{{ product.title | json }},
+          ct: collections,
+          iu: {% if variant.image %} {{ variant | img_url: '620x620' | json }} {% else %} piu {% endif %},
+          stk: {{variant.inventory_quantity}},
+          pr: {{ variant.price }}/100,
+          {% if variant.compare_at_price %} op: {{variant.compare_at_price}}/100, {% endif %}
+          variants: [{ {{ variant.title | json }} : {{variant.id|json}}}]
+        };
+        wishlistWatchProducts[{{variant.id | json}}] = o[{{variant.id | json}}] = {"id": {{variant.id | json}}, "available": {{variant.available | json}},"inventory_management": {{variant.inventory_management | json}},"inventory_quantity": {{variant.inventory_quantity | json}},"title": {{variant.title | json}}, "inventory_policy": {{variant.inventory_policy | json}}};
+        {% endfor %}
+        let product_data = {
+          empi:empi, epi:{{ currentVariant.id }},
+          dt	:{{ product.title | json }},du:"{{ shop.url }}{{ product.url }}",
+          ct 	:collections,pr:{{ currentVariant.price }}/100,stk:{{ currentVariant.inventory_quantity }},
+          iu	:{% if currentVariant.image %} {{ currentVariant | img_url: '620x620' | json }} {% else %} piu {% endif %},variants:[{ {{currentVariant.title | json}} : {{currentVariant.id | json}} }]
+          {% if currentVariant.compare_at_price %} ,op:{{currentVariant.compare_at_price}}/100 {% endif %}
+        };
+        wishlistViewProducts[{{product.handle | json}}] = wishlistViewProducts[{{product.id | json}}] = product_data;
+        wishlistWatchProducts[{{product.handle | json}}] = wishlistWatchProducts[{{product.id | json}}] = o;
+      })();
+  </script>
+{%- endif -%}

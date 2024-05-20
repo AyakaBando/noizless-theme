@@ -1,0 +1,10 @@
+{%- capture VariantSKU -%}
+{ {%- for variant in product.variants -%}"{{- variant.title -}}":"{{- variant.sku -}}"{%- unless forloop.last -%},{%- endunless -%}{%- endfor -%} }
+{%- endcapture -%}
+{%- capture VariantSize -%}
+{ {%- for variant in product.variants -%}"{{- variant.title -}}":"{{- variant.metafields.custom["size"]  -}}"{%- unless forloop.last -%},{%- endunless -%}{%- endfor -%} }
+{%- endcapture -%}
+{%- capture VariantPriceInfo -%}
+{ {%- for variant in product.variants -%}"{{- variant.title -}}":"{{- variant.metafields.custom["price_info"]  -}}"{%- unless forloop.last -%},{%- endunless -%}{%- endfor -%} }
+{%- endcapture -%}
+{% layout none %}{{- product.title -}}++{{- VariantSize -}}++{{- product.metafields.custom["category"].value.title -}}++{{- product.metafields.custom["_maker_itempage_url"] -}}++{{- product.metafields.custom["_maker_itempage_name"] -}}++{{- product.metafields.custom["_telnumber"] -}}++{{- product.metafields.custom["product_details"] -}}++{{- product.metafields.custom["product_type"] -}}++{{- VariantSKU -}}++{{- product.metafields.custom["open_price"] -}}++{{-VariantPriceInfo -}}++{{- product.metafields.custom["common_name"] -}}

@@ -1,0 +1,35 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-list-collections",
+      "blocks": {
+        "d2c8f101-bfee-4e04-82c3-f2b510cd8d0f": {
+          "type": "collection",
+          "settings": {
+            "collection": "",
+            "image_alignment": "center center",
+            "content_position": "bottomLeft",
+            "subheading": "Sub-heading",
+            "title": "Heading",
+            "button_text": "View products"
+          }
+        }
+      },
+      "block_order": [
+        "d2c8f101-bfee-4e04-82c3-f2b510cd8d0f"
+      ],
+      "settings": {
+        "collections_to_show": "all",
+        "image_size": "small",
+        "add_spacing": true,
+        "expand_collection": false,
+        "apply_overlay": true,
+        "text_color": "#ffffff",
+        "button_color": "#363636"
+      }
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

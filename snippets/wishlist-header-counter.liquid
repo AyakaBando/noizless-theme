@@ -1,0 +1,33 @@
+<script class="wishlist-header-counter-custom">
+    function renderWishlistCounter() {
+        const count = getWishlistCountFromLocalStorage();
+        updateCounterElements(count);
+    }
+
+    function updateCounterElements(count) {
+        const counterElements = document.querySelectorAll('.wishlist-header-counter');
+        counterElements.forEach((element) => {
+            element.innerText = count;
+        });
+    }
+
+    function getWishlistCountFromLocalStorage() {
+        const wishlistItems = localStorage.getItem('wishlist');
+        if (!wishlistItems) {
+            return 0;
+        }
+        const parsedWishlistItems = JSON.parse(wishlistItems);
+        return parsedWishlistItems.length;
+    }
+
+    // Update counter when a product is added to the wishlist
+    document.addEventListener('click', function(event) {
+        const target = event.target;
+        if (target && target.classList.contains('add-to-wishlist-button')) {
+            const count = getWishlistCountFromLocalStorage()++;
+            updateCounterElements(count);
+        }
+    });
+
+    window.addEventListener('DOMContentLoaded', renderWishlistCounter);
+</script>

@@ -1,0 +1,233 @@
+<section class="Section {% unless section.settings.image %}Section--spacingNormal{% endunless %} {% if section.settings.margin_bottom %}margin-bottom{% endif %}">
+  {% if section.settings.section_title != blank %}
+    <div class="section__title">
+      <h2 class="SectionHeader__Heading Heading_catch u-h1">{{ section.settings.section_title }}</h2>
+    </div>
+  {% endif %}
+  {%- capture section_content -%}
+    <div class="FeatureText__ContentWrapper">
+      <div class="FeatureText__Content">
+        {%- if section.settings.subheading != blank or section.settings.title != blank or section.settings.content != blank -%}
+          <header class="SectionHeader">
+            {%- if section.settings.subheading != blank -%}
+              <h3 class="SectionHeader__SubHeading Heading u-h6">{{ section.settings.subheading | escape }}</h3>
+            {%- endif -%}
+
+            {%- if section.settings.title != blank -%}
+              <h2 class="SectionHeader__Heading Heading u-h3 {% if section.settings.sp_center %}sp_center{% endif %}">{{ section.settings.title }}</h2>
+            {%- endif -%}
+
+            {%- if section.settings.content != blank -%}
+              <div class="SectionHeader__Description Rte">
+                {{ section.settings.content }}
+              </div>
+            {%- endif -%}
+
+            {%- if section.settings.link_text != blank -%}
+              <a href="{{ section.settings.link_url }}" class="{% if section.settings.link_button == true %}Button Button--primary button__center{% else %}Link Link--underline--allow{% endif %}">{{ section.settings.link_text }}
+                {% if section.settings.link_button == true %}
+                  {% render 'allow.svg' %}
+                {% endif %}
+              </a>
+            {%- endif -%}
+          </header>
+        {%- endif -%}
+      </div>
+    </div>
+  {%- endcapture -%}
+
+  {%- capture section_image -%}
+    {%- if section.settings.image != blank -%}
+      <div class="FeatureText__ImageWrapper">
+        {%- capture supported_sizes -%}{%- render 'image-size', sizes: '400,600,700,800,900,1000,1200', image: section.settings.image -%}{%- endcapture -%}
+
+        <div class="AspectRatio" style="max-width: {{ section.settings.image.width }}px; --aspect-ratio: {{ section.settings.image.aspect_ratio }}; width: {{section.settings.image_size}}%; margin-left: auto;">
+          {%- assign image_url = section.settings.image | img_url: '1x1' | replace: '_1x1.', '_{width}x.' -%}
+          <img class="Image--lazyLoad Image--slide{{ section.settings.image_position | capitalize }}" data-src="{{ image_url }}" data-expand="-200" data-widths="[{{ supported_sizes }}]" data-sizes="auto" alt="{{ section.settings.image.alt | escape }}">
+
+          <noscript>
+            <img src="{{ section.settings.image | img_url: '800x' }}" alt="{{ section.settings.image.alt | escape }}">
+          </noscript>
+        </div>
+      </div>
+    {%- endif -%}
+  {%- endcapture -%}
+
+  <div class="Container">
+    <div class="FeatureText {% if section.settings.image != blank %}FeatureText--withImage FeatureText--image{{ section.settings.image_position | capitalize }}{% endif %}">
+      {%- if section.settings.image_position == 'left' -%}
+        {{- section_image -}}
+        {{- section_content -}}
+      {%- else -%}
+        {{- section_content -}}
+        {{- section_image -}}
+      {%- endif -%}
+    </div>
+  </div>
+
+</section>
+
+<style>
+    .FeatureText__ImageWrapper .AspectRatio {
+      margin-right: 0;
+    }
+
+    @media screen and (max-width: 767px) {
+      .FeatureText__ImageWrapper .AspectRatio {
+        margin-right: auto;
+      }
+    }
+
+    .section__title .Heading_catch span {
+      font-size: 32px;
+      margin-top: 8px;
+      padding-left: 10px;
+    }
+    @media screen and (max-width: 767px) {
+      .section__title .Heading_catch span {
+        font-size: 24px;
+      }
+    }
+
+    .u-h3 span {
+      font-size: 28px;
+    }
+    @media screen and (max-width: 767px) {
+      .u-h3 span {
+        font-size: 20px;
+      }
+    }
+
+
+    .Button span {
+      font-size: 14px;
+    }
+
+    @media screen and (max-width: 767px) {
+      .Button span {
+        font-size: 12px;
+      }
+
+      .button__center {
+        font-size: 14px;
+        white-space: nowrap;
+      }
+    }
+
+    @media screen and (max-width: 767px) {
+      .sp_center {
+        text-align: center;
+      }
+    }
+
+    .margin-bottom {
+      margin-bottom: 40px;
+    }
+    @media screen and (max-width: 767px) {
+      .margin-bottom {
+        margin-bottom: 0px;
+      }
+    }
+
+
+</style>
+
+{% schema %}
+{
+  "name": "Rich text with image",
+  "class": "shopify-section--bordered",
+  "settings": [
+    {
+      "type": "html",
+      "id": "section_title",
+      "label": "Section-heading",
+      "default": "Section-heading"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Sub-heading",
+      "default": "Sub-heading"
+    },
+    {
+      "type": "html",
+      "id": "title",
+      "label": "Heading",
+      "default": "<p>Title</p>"
+    },
+    {
+      "type": "checkbox",
+      "id": "sp_center",
+      "label": "SP Center",
+      "default": false
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image",
+      "info": "1200 x 1200px .png recommended"
+    },
+    {
+      "type": "range",
+      "id": "image_size",
+      "min": 50,
+      "max": 100,
+      "step": 10,
+      "unit": "%",
+      "label": "Image size",
+      "default": 100
+    },
+    {
+      "type": "select",
+      "id": "image_position",
+      "label": "Image position",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "right"
+    },
+    {
+      "type": "richtext",
+      "id": "content",
+      "label": "Text",
+      "default": "<p>Add your own custom content to give more information about your store, availability details...</p>"
+    },
+    {
+      "type": "html",
+      "id": "link_text",
+      "label": "Link text"
+    },
+    {
+      "type": "url",
+      "id": "link_url",
+      "label": "Link URL"
+    },
+    {
+      "type": "checkbox",
+      "id": "link_button",
+      "label": "Link button",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "margin_bottom",
+      "label": "Margin bottom",
+      "default": false
+    } 
+  ],
+  "presets": [
+    {
+      "category": "Text",
+      "name": "Rich text with image",
+      "settings": {}
+    }
+  ]
+}
+{% endschema %}

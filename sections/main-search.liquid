@@ -1,0 +1,359 @@
+{%- assign filter_tree_vertical_style = shop.metafields.bc-sf-filter.settings | split: 'general":' | last | split: 'filterTreeVerticalStyle":"' | last | split: '","' | first | strip -%}
+{%- assign enable_filter_sticky_d = shop.metafields.bc-sf-filter.settings | split: 'general":' | last | split: 'stickyFilterOnDesktop":' | last | split: ',' | first | strip -%}
+{%- assign enable_filter_sticky_m = shop.metafields.bc-sf-filter.settings | split: 'general":' | last | split: 'stickyFilterOnMobile":' | last | split: ',' | first |  split: '}}' | first | strip -%}
+
+{%- if filter_tree_vertical_style == 'style-off-canvas' or filter_tree_vertical_style == 'style-expand' -%}
+  {%- assign enable_filter_tree_button_desktop_v = true -%}
+{%- else -%}
+  {%- assign enable_filter_tree_button_desktop_v = false -%}
+{%- endif -%}
+
+{%- assign desktop_items_per_row = 4 -%}
+{%- assign mobile_items_per_row  = 2 -%}
+
+{%- if desktop_items_per_row == 4 -%}
+  {%- assign tablet_items_per_row = 3 -%}
+{%- else -%}
+  {%- assign tablet_items_per_row = 2 -%}
+{%- endif -%}
+
+{%- capture section_settings -%}
+{
+  "sectionId": {{ section.id | json }},
+  "filterPosition": "sidebar"
+}
+{%- endcapture -%}
+
+<section data-section-id="search" data-section-type="collection" data-section-settings='{{ section_settings }}'>
+  {%- paginate search.results by 1 -%}
+    <header class="PageHeader">
+      <div class="Container">
+        <div class="SectionHeader SectionHeader--center">
+          <h1 class="SectionHeader__Heading Heading u-h1 boost-pfs-search-result-header">{{ 'search.general.title' | t }}</h1>
+
+          <div class="SectionHeader__Description boost-pfs-search-result-number">
+            {%- assign filtered_terms = search.terms | replace: '*', '' -%}
+            {{- 'search.general.results_with_terms_count' | t: count: search.results_count, terms: filtered_terms -}}
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="boost-pfs-search-result-toolbar Container">
+      {%- if enable_filter_tree_button_desktop_v  -%}
+        <div class="boost-pfs-search-result-item">
+          <div class="boost-pfs-filter-tree-desktop-button">{%- render 'boost-pfs-filter-skeleton', type: 'button' -%}</div>
+        </div>
+      {%- endif -%}
+      <div class="boost-pfs-search-result-item">
+        <ul class="boost-pfs-search-result-panel-controls">
+          <li>{% include 'boost-pfs-filter-skeleton', width: 2 %}</li>
+          <li>{% include 'boost-pfs-filter-skeleton', width: 2 %}</li>
+          <li>{% include 'boost-pfs-filter-skeleton', width: 1 %}</li>
+        </ul>
+      </div>
+      <div class="boost-pfs-search-result-item">
+        <span class="filters-toolbar__product-count boost-pfs-search-total-result">
+          {% include 'boost-pfs-filter-skeleton', width: 2 %}
+        </span>
+      </div>
+    </div>
+  <div class="CollectionToolbar CollectionToolbar--top CollectionToolbar--reverse boost-pfs-search-panel-product-show">
+    <div class="CollectionToolbar__Group template-collection">
+      <div class="Text--subdued boost-pfs-filter-tree-mobile-button CollectionToolbar__Item CollectionToolbar__Item--filter Heading u-h6 {% if section.settings.filter_position != 'drawer' %}hidden-lap-and-up{% endif %}"
+           data-action="open-drawer"
+           data-drawer-id="collection-filter-drawer"
+           aria-label="{{ 'collection.filter.show_filter' | t }}">
+        <span>{{ 'collection.filter.title' | t }} </span>
+      </div>
+      {%- if section.settings.show_sort_by -%}
+        <button class="CollectionToolbar__Item CollectionToolbar__Item--sort Heading Text--subdued u-h6"
+                aria-label="{{ 'collection.sorting.show_sort' | t }}"
+                aria-haspopup="true"
+                aria-expanded="false"
+                aria-controls="collection-sort-popover">
+          {{ 'collection.sorting.title' | t }} {% render 'icon' with 'select-arrow' %}
+        </button>
+      {%- endif -%}
+    </div>
+  </div>
+  <div id="collection-sort-popover" class="Popover" aria-hidden="true">
+    <header class="Popover__Header">
+      <button class="Popover__Close Icon-Wrapper--clickable" data-action="close-popover" aria-label="{{ 'general.popup.close' | t }}">{% render 'icon' with 'close' %}</button>
+      <span class="Popover__Title Heading u-h4">{{ 'collection.sorting.title' | t }}</span>
+    </header>
+    <div class="Popover__Content">
+      <div class="boost-pfs-filter-top-sorting Popover__ValueList" data-scrollable></div>
+    </div>
+  </div>
+    <div class="CollectionInner boost-pfs-search-panel-product-show boost-pfs-filter-wrapper">
+      <div class="boost-pfs-filter-left-col CollectionInner__Sidebar CollectionInner__Sidebar--withTopToolbar">
+        <div class="boost-pfs-filter-tree boost-pfs-filter-tree-v">
+          {% comment %} Include placeholder template {% endcomment %}
+          {%- unless enable_filter_tree_button_desktop_v -%}
+            {% render 'boost-pfs-filter-skeleton', type: 'filter-tree' %}
+          {%- endunless -%}
+        </div>
+      </div>
+
+      <div class="boost-pfs-filter-right-col CollectionInner__Products">
+        <div class="ProductListWrapper">
+          <div class="boost-pfs-filter-products ProductList ProductList--grid Grid" data-desktop-count="4" data-mobile-count="2">
+            {%- for result in search.results -%}
+              <div class="Grid__Cell 1/2 1/3--tablet 1/4--lap-and-up" style="display: none">
+                {%- render 'product-item', product: result, show_labels: true, show_product_info: true, show_vendor: false -%}
+              </div>
+            {%- endfor -%}
+          </div>
+
+          <div class="boost-pfs-filter-bottom-pagination"></div>
+          <div class="boost-pfs-filter-load-more"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="boost-pfs-search-result-wrap boost-hidden Container">
+      <div class="boost-pfs-search-result-collections">
+        <div class="boost-pfs-search-result-list-item">
+          <a href="#">{% include 'boost-pfs-filter-skeleton', width: 4 %}</a>
+        </div>
+        <div class="boost-pfs-search-result-list-item">
+          <a href="#">{% include 'boost-pfs-filter-skeleton', width: 3 %}</a>
+        </div>
+        <div class="boost-pfs-search-result-list-item">
+          <a href="#">{% include 'boost-pfs-filter-skeleton', width: 4 %}</a>
+        </div>
+      </div>
+      <div class="boost-pfs-search-result-collection-pagination">{% include 'boost-pfs-filter-skeleton', width: 4 %}</div>
+    </div>
+
+    <div class="boost-pfs-search-result-wrap boost-hidden Container">
+      <div class="boost-pfs-search-result-pages">
+        <div class="boost-pfs-search-result-list-item">
+          <a href="#">{% include 'boost-pfs-filter-skeleton', width: 4 %}</a>
+        </div>
+        <div class="boost-pfs-search-result-list-item">
+          <a href="#">{% include 'boost-pfs-filter-skeleton', width: 3 %}</a>
+        </div>
+        <div class="boost-pfs-search-result-list-item">
+          <a href="#">{% include 'boost-pfs-filter-skeleton', width: 4 %}</a>
+        </div>
+      </div>
+      <div class="boost-pfs-search-result-page-pagination">{% include 'boost-pfs-filter-skeleton', width: 4 %}</div>
+    </div>
+  {%- endpaginate -%}
+</section>
+
+{% capture rating_star_half %}
+	{%- render 'icon' with 'rating-star-half', class: 'rating__star rating__star--half' -%}
+{% endcapture %}
+
+{% capture rating_star_full %}
+	{%- render 'icon' with 'rating-star', class: 'rating__star rating__star--full' -%}
+{% endcapture %}
+
+{% capture rating_star_empty %}
+	{%- render 'icon' with 'rating-star', class: 'rating__star rating__star--empty' -%}
+{% endcapture %}
+
+{%- liquid
+  assign collections_list = ""
+  for collection in collections
+    assign collections_list = collections_list | append: "++" | append: collection.id | append: " , " | append: collection.title
+  endfor
+  assign collections_list = collections_list | remove_first: '++' | split: "++" 
+-%}
+
+<script>
+	// Declare boostPFSThemeConfig variable
+	var boostPFSThemeConfig = {
+		label: {
+      {%- for option in collection.sort_options -%}
+      {% assign label_key = option.value | replace: '-', '_'%}
+      {% if label_key == 'manual' %}
+        {% assign label_key = 'featured' %}
+      {% endif %}
+      {%- endfor -%}
+
+      sale: {% assign temp = 'product.labels.on_sale' | t   %} {% unless temp contains 'translation missing'  %} "{{ temp }}" {% else %} "On Sale" {% endunless %},
+      sold_out: {% assign temp = 'product.labels.sold_out' | t   %} {% unless temp contains 'translation missing'  %} "{{ temp }}" {% else %} "Sold out" {% endunless %},
+      from_price_html: {% assign temp = 'collection.product.from_price_html' | t   %} {% unless temp contains 'translation missing'  %} "{{ temp }}" {% else %} "From" {% endunless %},
+      view_product: {% assign temp = 'collection.product.view_product' | t  %} {% unless temp contains 'translation missing'  %} "{{ temp }}" {% else %} "View" {% endunless %},
+
+      search_results_zero: "{{ 'search.general.results_with_terms_count.zero' | t  }}",
+      search_results_one: "{{ 'search.general.results_with_terms_count.one' | t  }}",
+      search_results_other: "{{ 'search.general.results_with_terms_count.other' | t  }}",
+      star_reviews_info: {{ 'general.accessibility.star_reviews_info' | t | json }},
+      reviews_count: {{ 'product.general.reviews_count.other' | t | json }},
+		},
+		custom: {
+      section_id : {{ section.id | json }},
+      show_product_info: true,
+      show_labels: true,
+      use_horizontal: false,
+      horizontal_class: {% if use_horizontal %}"ProductItem--horizontal"{% else%}""{% endif %},
+      product_image_size: {{ settings.product_image_size | json }},
+      product_show_secondary_image: {{ settings.product_show_secondary_image | json }},
+      product_info_alignment: {{ settings.product_info_alignment | json }},
+      product_show_price_on_hover: {{ settings.product_show_price_on_hover  | json }},  
+      mobile_items_per_row: {{ mobile_items_per_row | json }},
+      tablet_items_per_row: {{ tablet_items_per_row |json }},
+      desktop_items_per_row: {{ desktop_items_per_row | json }},
+      filter_position: {% if section.settings.filter_position == 'drawer' %} "lap-and-up" {% else %} "desk" {% endif %},
+      products_per_page: {% if section.settings.grid_items_per_page %} {{ section.settings.grid_items_per_page | json }} {% else %} 16 {% endif %},
+      products_per_row: {% if section.settings.grid_desktop_items_per_row %} {{ section.settings.grid_desktop_items_per_row  | json }} {% else %} 4 {% endif %},
+      products_per_row_mobile: {% if section.settings.grid_mobile_items_per_row %} {{ section.settings.grid_mobile_items_per_row  | json }} {% else %} 2 {% endif %},
+      show_vendor: {% if section.settings.show_vendor %} {{ section.settings.show_vendor | json }} {% else %} false {% endif %},
+      show_color_swatch: {% if section.settings.show_color_swatch %} {{ section.settings.show_color_swatch | json }} {% else %} false {% endif %},
+      show_sorting: {% if section.settings.show_sort_by %} {{ section.settings.show_sort_by | json }} {% else %} false {% endif %},
+      show_layout_switch: {% if section.settings.show_layout_switch %} {{ section.settings.show_layout_switch | json }} {% else %} false {% endif %},
+      rating_star_half: {{ rating_star_half | json }},
+      rating_star_full: {{ rating_star_full | json }},
+      rating_star_empty: {{ rating_star_empty | json }},
+      currency_code_enabled: {% if settings.currency_code_enabled %} {{ settings.currency_code_enabled | json }} {% else %} false {% endif %},
+      show_product_rating: {% if settings.show_product_rating != blank %} {{ settings.show_product_rating | json }} {% else %} false {% endif %},
+      collections_list: {{ collections_list | json }}
+		}
+  };
+	// Declare boostPFSTemplate variable
+	var boostPFSTemplate = {
+    // Grid Template
+    'productGridItemHtml': {% render 'boost-pfs-filter-html', layout: 'productGridItemHtml' %},
+
+    // Pagination Template
+    'previousActiveHtml': {% render 'boost-pfs-filter-html', layout: 'previousActiveHtml' %},
+    'previousDisabledHtml': {% render 'boost-pfs-filter-html', layout: 'previousDisabledHtml' %},
+    'nextActiveHtml': {% render 'boost-pfs-filter-html', layout: 'nextActiveHtml' %},
+    'nextDisabledHtml': {% render 'boost-pfs-filter-html', layout: 'nextDisabledHtml' %},
+    'pageItemHtml': {% render 'boost-pfs-filter-html', layout: 'pageItemHtml' %},
+    'pageItemSelectedHtml': {% render 'boost-pfs-filter-html', layout: 'pageItemSelectedHtml' %},
+    'pageItemRemainHtml': {% render 'boost-pfs-filter-html', layout: 'pageItemRemainHtml' %},
+
+    'paginateHtml': {% render 'boost-pfs-filter-html', layout: 'paginateHtml' %},
+
+    // Sorting Template
+    'sortingHtml': {% render 'boost-pfs-filter-html', layout: 'sortingHtml' %},
+	};
+</script>
+{% schema %}
+
+{
+  "name": "Search",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Toolbar"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_sort_by",
+      "label": "Show sort by",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_layout_switch",
+      "label": "Show layout switch"
+    },
+    {
+      "type": "select",
+      "id": "toolbar_position",
+      "label": "Position",
+      "options": [
+        {
+          "value": "top",
+          "label": "Top"
+        },
+        {
+          "value": "bottom",
+          "label": "Bottom"
+        }
+      ],
+      "default": "top"
+    },
+    {
+      "type": "header",
+      "content": "Filters"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_filters",
+      "label": "Show filters",
+      "info": "[Customize filters](/admin/menus)",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_filter_color_swatch",
+      "label": "Show filter color swatch",
+      "info": "Transform color filters to swatches.",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "expand_filters",
+      "label": "Expand filters on desktop",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "filter_position",
+      "label": "Desktop position",
+      "options": [
+        {
+          "value": "sidebar",
+          "label": "Sidebar"
+        },
+        {
+          "value": "drawer",
+          "label": "Drawer"
+        }
+      ],
+      "default": "sidebar"
+    },
+    {
+      "type": "link_list",
+      "id": "filter_menu",
+      "label": "Quick links",
+      "info": "This menu won't show dropdown items."
+    },
+    {
+      "type": "header",
+      "content": "Grid"
+    },
+    {
+      "type": "range",
+      "id": "grid_items_per_page",
+      "label": "Products per page",
+      "min": 4,
+      "max": 48,
+      "step": 4,
+      "default": 36
+    },
+    {
+      "type": "select",
+      "id": "grid_mobile_items_per_row",
+      "label": "Products per row (mobile)",
+      "options": [
+        {
+          "value": "1",
+          "label": "1"
+        },
+        {
+          "value": "2",
+          "label": "2"
+        }
+      ],
+      "default": "2"
+    },
+    {
+      "type": "range",
+      "min": 2,
+      "max": 4,
+      "id": "grid_desktop_items_per_row",
+      "label": "Products per row (desktop)",
+      "default": 4
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,13 @@
+{
+  "layout": false,
+  "sections": {
+    "main": {
+      "type": "custom-get-product-metafield",
+      "settings": {
+      }
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

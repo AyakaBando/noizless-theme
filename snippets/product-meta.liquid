@@ -1,0 +1,115 @@
+<div class="ProductMeta" {{ block.shopify_attributes }}>
+  {%- if block.settings.show_vendor and product.vendor != blank -%}
+    <h2 class="ProductMeta__Vendor Heading u-h8">
+      {%- assign vendor_handle = product.vendor | handle -%}
+      {%- assign collection_for_vendor = collections[vendor_handle] -%}
+
+      {%- unless collection_for_vendor.empty? -%}
+        <a href="{{ collection_for_vendor.url }}">{{ product.vendor }}</a>
+      {%- else -%}
+        {{- product.vendor -}}
+      {%- endunless -%}
+    </h2>
+  {%- endif -%}
+
+  {% if block.settings.show_tags == true %}
+    {% for tag in product.tags %}
+      {% if tag contains 'label__面' %}
+        <div class="ProductPage_labelItem men u-h8">{{ tag | remove: "label__" }}</div>
+      {% endif %}
+      {% if tag contains 'label__線' %}
+        <div class="ProductPage_labelItem sen u-h8">{{ tag | remove: "label__" }}</div>
+      {% endif %}
+      {% if tag contains 'label__点' %}
+        <div class="ProductPage_labelItem ten u-h8">{{ tag | remove: "label__" }}</div>
+      {% endif %}
+    {% endfor %}
+  {% endif %}
+
+  <div class="productMeta__title_wrapper">
+    <h1 class="ProductMeta__Title_product Heading u-h2">
+      {%- if template.name == 'product' -%}
+        {{- product.title -}}
+      {%- else -%}
+        <a href="{{ product.url }}">{{ product.title }}</a>
+      {%- endif -%}
+    </h1>
+    {% if block.settings.show_heart_link == true %}
+    <div>
+      <a href="#variant_look">♡</a>
+    </div>
+    {% endif %}
+  </div>
+
+  <div class="ProductItem__type_details u-h9">
+    {{product.metafields.custom.product_type}}
+  </div>
+
+  {%- if block.settings.show_product_rating -%}
+    <div class="ProductMeta__Rating Heading Text--subdued u-h7">
+      {%- render 'product-rating', product: product -%}
+    </div>
+  {%- endif -%}
+
+  {%- if block.settings.show_sku and product.selected_or_first_available_variant.sku != blank -%}
+    <p class="ProductMeta__Sku Heading Text--subdued u-h6">{{ 'product.form.sku' | t }}: <span class="ProductMeta__SkuNumber">{{ product.selected_or_first_available_variant.sku }}</span></p>
+  {%- endif -%}
+
+  {% if block.settings.hidden_price == false %}
+  {%- if product.template_suffix != 'coming-soon' -%}
+    <div class="ProductMeta__PriceList Heading">
+      {%- if settings.currency_code_enabled -%}
+        {%- if product.selected_or_first_available_variant.compare_at_price > product.selected_or_first_available_variant.price -%}
+          <span class="ProductMeta__Price Price Price--highlight Text--subdued u-h4">{{ product.selected_or_first_available_variant.price | money_with_currency }}</span>
+          <span class="ProductMeta__Price Price Price--compareAt Text--subdued u-h4">{{ product.selected_or_first_available_variant.compare_at_price | money_with_currency }}</span>
+        {%- else -%}
+          <span class="ProductMeta__Price Price Text--subdued u-h4">{{ product.selected_or_first_available_variant.price | money_with_currency }}</span>
+        {%- endif -%}
+      {%- else -%}
+        {%- if product.selected_or_first_available_variant.compare_at_price > product.selected_or_first_available_variant.price -%}
+          <span class="ProductMeta__Price Price Price--highlight Text--subdued u-h4">{{ product.selected_or_first_available_variant.price | money }}</span>
+          <span class="ProductMeta__Price Price Price--compareAt Text--subdued u-h4">{{ product.selected_or_first_available_variant.compare_at_price | money }}</span>
+        {%- else -%}
+          <span class="ProductMeta__Price Price Text--subdued u-h4">{{ product.selected_or_first_available_variant.price | money }}</span>
+        {%- endif -%}
+      {%- endif -%}
+    </div>
+
+    <div class="ProductMeta__UnitPriceMeasurement" style="display: {%- if product.selected_or_first_available_variant.unit_price_measurement -%}block{% else %}none{% endif %}">
+      <div class="UnitPriceMeasurement Heading u-h6 Text--subdued">
+        <span class="UnitPriceMeasurement__Price">{{ product.selected_or_first_available_variant.unit_price | money }}</span>
+        <span class="UnitPriceMeasurement__Separator">/ </span>
+        <span class="UnitPriceMeasurement__ReferenceValue" style="display: {% if product.selected_or_first_available_variant.unit_price_measurement.reference_value != 1 %}inline{% else %}none{% endif %}">{{ product.selected_or_first_available_variant.unit_price_measurement.reference_value }}</span>
+        <span class="UnitPriceMeasurement__ReferenceUnit">{{ product.selected_or_first_available_variant.unit_price_measurement.reference_unit }}</span>
+      </div>
+    </div>
+  {%- endif -%}
+  {% endif %}
+
+  {%- if block.settings.show_taxes_included -%}
+    {%- if shop.taxes_included or shop.shipping_policy.body != blank -%}
+      <p class="ProductMeta__TaxNotice Rte">
+        {%- if shop.taxes_included -%}
+          {{ 'product.general.include_taxes' | t }}
+        {%- endif -%}
+
+        {%- if shop.shipping_policy.body != blank -%}
+          {{ 'product.general.shipping_policy_html' | t: link: shop.shipping_policy.url }}
+        {%- endif -%}
+      </p>
+    {%- endif -%}
+  {%- endif -%}
+
+  {% if block.settings.show_link == true %}
+      <div class="variant__look__wrapper">
+        <p class="variant__look__text">商品バリエーション・お気に入り登録は<br class="is-sp">こちらからご確認ください</p>
+        <a href="#variant_look" class="Button Button--primary variant__look__button">{% render 'icon' with 'heart' %}お気に入り登録はこちらから</a>
+      </div>
+  {% endif %}
+
+  {{- form | payment_terms -}}
+</div>
+
+{% if block.settings.show_border_bottom == true %}
+<div class="border_bottom"></div>
+{% endif %}

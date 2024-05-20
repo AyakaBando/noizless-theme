@@ -1,0 +1,47 @@
+{
+  "sections": {
+    "1663296909a818037a": {
+      "type": "slideshow2",
+      "blocks": {
+        "166329690922987600-0": {
+          "type": "image",
+          "settings": {
+            "image": "shopify:\/\/shop_images\/Mask_group.png",
+            "mobile_image": "shopify:\/\/shop_images\/collection-image-sp.png",
+            "apply_overlay": false,
+            "content_position": "middleCenter",
+            "subheading": "",
+            "title": "お問い合わせ",
+            "button_1_text": "",
+            "button_1_link": "",
+            "button_2_text": "",
+            "button_2_link": ""
+          }
+        }
+      },
+      "block_order": [
+        "166329690922987600-0"
+      ],
+      "settings": {
+        "show_fullscreen": false,
+        "show_arrow": false,
+        "autoplay": true,
+        "cycle_speed": 5,
+        "text_color": "#ffffff",
+        "button_color": "#363636",
+        "button_background": "#ffffff"
+      }
+    },
+    "main": {
+      "type": "main-page",
+      "settings": {
+        "show_large": false,
+        "show_title": false
+      }
+    }
+  },
+  "order": [
+    "1663296909a818037a",
+    "main"
+  ]
+}

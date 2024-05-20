@@ -1,0 +1,63 @@
+{%- assign collection_image = block.settings.image | default: collection.image | default: collection.products.first.featured_image -%}
+
+<a href="{{ block.settings.button_link | default: collection.url }}" {{ block.shopify_attributes }} class="CollectionItem {% if section.settings.expand_collection %}CollectionItem--expand{% endif %} Carousel__Cell {% if forloop.first %}is-selected{% endif %}" data-slide-index="{{ forloop.index0 }}">
+  {%- capture mobile_size -%}110x{% if collection_image.height >= 188 %}188{% else %}{{ collection_image.height }}{% endif %}{%- endcapture -%}
+  {%- assign image_crop = block.settings.image_alignment | split: ' ' | last -%}
+
+  <div class="CollectionItem__Wrapper CollectionItem__Wrapper--{{ section.settings.image_size }}" {% if collection_image %}style="background-image: url({{ collection_image | img_url: '1x1' }})"{% endif %}>
+    <div class="CollectionItem__ImageWrapper">
+      <div class="CollectionItem__Image {% if apply_overlay %}Image--contrast{% endif %} Image--lazyLoad Image--zoomOut hide-no-js"
+           style="background-position: {{ block.settings.image_alignment }}"
+           data-optimumx="1.4"
+           data-expand="-150"
+           {% if collection_image %}data-bgset="{{ collection_image | img_url: mobile_size, crop: image_crop }} 166w, {{ collection_image | img_url: 'master' }} 282w, {{ collection_image | img_url: 'master' }} 282w"{% endif %}>
+        {%- if collection_image == nil -%}
+          <div class="PlaceholderBackground PlaceholderSvg--dark">
+            {%- capture image_name -%}lifestyle-{% cycle 'anchor': '1', '2' %}{%- endcapture -%}
+            {{ image_name | placeholder_svg_tag: 'PlaceholderBackground__Svg' }}
+          </div>
+        {%- endif -%}
+      </div>
+
+      {%- if collection_image -%}
+        <noscript>
+          <div class="CollectionItem__Image {% if apply_overlay %}Image--contrast{% endif %}" style="background-position: {{ block.settings.image_alignment }}; background-image: url({{ collection_image | img_url: 'master' }})"></div>
+        </noscript>
+      {%- endif -%}
+    </div>
+
+    <div class="CollectionItem__Content CollectionItem__Content--{{ block.settings.content_position | default: 'bottomLeft' }}">
+      <header class="SectionHeader">
+
+        <h2 class="SectionHeader__Heading SectionHeader__Heading--emphasize Heading u-h1">{{ block.settings.title | default: collection.title | escape }}</h2>
+
+        {% assign tag_list = "" %}
+        <div class="ProductPage_label">
+          {% for product in collection.products %}
+          {% for tag in product.tags %}
+            {% assign tag_list = tag_list |  append: "," | append: tag %}
+          {% endfor %}
+          {% endfor %}
+
+          {% assign tag_list = tag_list | remove_first: "," %}
+          {% assign tag_array = tag_list | split: "," | uniq %}
+
+          {% for tag in tag_array %}
+          {% if tag contains 'label__面' %}
+            <div class="ProductPage_labelItem men">{{ tag | last | remove: "label__"  | split: "," | uniq }}</div>
+          {% endif %}
+
+          {% if tag contains 'label__線' %}
+            <div class="ProductPage_labelItem sen">{{ tag | last | remove: "label__" | uniq}}</div>
+          {% endif %}
+
+          {% if tag contains 'label__点' %}
+            <div class="ProductPage_labelItem ten">{{ tag | last | remove: "label__"| uniq }}</div>
+          {% endif %}
+          {% endfor %}
+        </div>
+
+      </header>
+    </div>
+  </div>
+</a>

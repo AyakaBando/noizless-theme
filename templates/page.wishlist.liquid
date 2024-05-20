@@ -1,0 +1,478 @@
+<div class="wishlist-outer-container">
+  <div class="wishlist-container-title-bar">
+    <div class="wishlist-main-title">私のお気に入り</div>
+    <div class="user-login-status-btn">
+      {% if customer %}
+        <div>Debug: Customer is logged in</div>
+        {{ customer.first_name }}
+        {% if customer.email %}
+          <div>{{ customer.email }}</div>
+        {% endif %}
+      {% else %}
+        <div>Debug: No customer found</div>
+        <div>Please log in to see your account details.</div>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="wishlist-detail-header">
+    <div class="setting-icon">
+      <svg
+        data-slot="icon"
+        fill="none"
+        stroke-width="1.5"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+        xmlns="http://www.w3.org/2000/svg"
+        aria-hidden="true"
+      >
+        <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 12.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 18.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5Z"></path>
+      </svg>
+    </div>
+  </div>
+
+  <div class="wishlist-content-container"></div>
+</div>
+
+{% comment %} Settings Modal Window {% endcomment %}
+<div id="settings-modal" class="modal">
+  <div class="modal-content">
+    <span class="close-button">&times;</span>
+    <ul class="modal-menu">
+      <li class="modal-menu-content">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+          class="w-6 h-6"
+        >
+          <path stroke-linecap="round" stroke-linejoin="round" d="M7.217 10.907a2.25 2.25 0 1 0 0 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186 9.566-5.314m-9.566 7.5 9.566 5.314m0 0a2.25 2.25 0 1 0 3.935 2.186 2.25 2.25 0 0 0-3.935-2.186Zm0-12.814a2.25 2.25 0 1 0 3.933-2.185 2.25 2.25 0 0 0-3.933 2.185Z" />
+        </svg>
+        <p>リストを共有</p>
+      </li>
+      <li class="modal-menu-content">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+          class="w-6 h-6"
+        >
+          <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 0 1-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 0 1 1.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 0 0-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 0 1-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 0 0-3.375-3.375h-1.5a1.125 1.125 0 0 1-1.125-1.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H9.75" />
+        </svg>
+        <p>リストを複製</p>
+      </li>
+      <li class="modal-menu-content content-red">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+          class="w-6 h-6"
+        >
+          <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+        </svg>
+        <p class="">リストを削除</p>
+      </li>
+    </ul>
+  </div>
+</div>
+
+{% comment %} Share Wishlist Modal Window {% endcomment %}
+<div id="share-wishlist-modal" class="modal share-wishlist-modal">
+  <div class="modal-content">
+    <span class="close-share-button">&times;</span>
+    <form id="share-wishlist-form">
+      <h2>メールでリストを共有する</h2>
+      <div class="wishlist-input-container">
+        <label for="share-name">送信者</label>
+        <input type="text" id="share-name" name="name" placeholder="お客様のフルネーム（任意）">
+      </div>
+
+      <div class="wishlist-input-container">
+        <label for="share-email">共有先アドレス<span class="required">*</span></label>
+        <input type="email" id="share-email" name="email" placeholder="shopper@example.com" required>
+        <span id="email-validation-message"></span>
+      </div>
+
+      <div class="wishlist-input-container">
+        <label for="share-comments">メッセージ</label>
+        <textarea id="share-comments" name="comments"></textarea>
+      </div>
+
+      <div class="required-mark"><span class="required">*</span>は必須です</div>
+
+      <div class="button-container">
+      <button type="submit" id="wishlist-submit" disabled>リストをシェアする</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    // Select the wishlist content container
+    const wishlistContentContainer = document.querySelector('.wishlist-content-container');
+    const wishlistItems = JSON.parse(localStorage.getItem('wishlist') || []);
+
+    if (wishlistItems.length > 0) {
+      wishlistItems.forEach((item) => {
+        console.log(item);
+
+        const priceInCents = Number(item.price);
+        const priceInYen = priceInCents / 100;
+        const priceText =
+          priceInYen == 0 ? 'オープン価格' : priceInYen.toLocaleString('ja-JP', { style: 'currency', currency: 'JPY' });
+        console.log(priceText);
+
+        const productHTML = `
+          <div class="wishlist-item-grid">
+            <div class="wishlist-item-box">
+              <img src="${item.image}">
+            </div>
+            <div class="wishlist-description">
+              <h3 class="wishlist-title">${item.name}</h3>
+              <div class="wishlist-common-name">${item.commonName}</div>
+              <p>${item.title}</p>
+              <p>${priceText}</p>
+              <div class="wishlist-common-name">${item.commonName}</div>
+              <small>メーカー</small> <br>
+              <small>${item.companyName}</small> <br>
+              <small>品番</small>
+              <p>${item.sku}</p>
+              <small>サイズ</small>
+              <p>${item.variantSize}</p>
+            </div>
+          </div>
+        `;
+
+        wishlistContentContainer.insertAdjacentHTML('beforeend', productHTML);
+      });
+    } else {
+      wishlistContentContainer.innerHTML = '<p>No items in your wishlist.</p>';
+    }
+
+    // Settings Modal functionality
+    const settingsModal = document.getElementById('settings-modal');
+    const openSettingsModalButton = document.querySelector('.setting-icon');
+    const closeSettingsModalButton = document.querySelector('.close-button');
+
+    openSettingsModalButton.addEventListener('click', () => {
+      settingsModal.style.display = 'block';
+    });
+
+    closeSettingsModalButton.addEventListener('click', () => {
+      settingsModal.style.display = 'none';
+    });
+
+    window.addEventListener('click', (event) => {
+      if (event.target == settingsModal) {
+        settingsModal.style.display = 'none';
+      }
+    });
+
+    // Share Wishlist Modal functionality
+    const shareWishlistModal = document.getElementById('share-wishlist-modal');
+    const closeShareWishlistModalButton = document.querySelector('.close-share-button');
+    const shareWishlistForm = document.getElementById('share-wishlist-form');
+    const emailInput = document.getElementById('share-email');
+    const emailValidationMessage = document.getElementById('email-validation-message');
+    const wishlistSubmitButton = document.getElementById('wishlist-submit');
+    const validRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+    const shareEmailInput = document.getElementById("share-email");
+
+    document.querySelectorAll('.modal-menu-content')[0].addEventListener('click', () => {
+      shareWishlistModal.style.display = 'block';
+      settingsModal.style.display = 'none';
+    });
+
+    closeShareWishlistModalButton.addEventListener('click', () => {
+      shareWishlistModal.style.display = 'none';
+    });
+
+    window.addEventListener('click', (event) => {
+      if (event.target == shareWishlistModal) {
+        shareWishlistModal.style.display = 'none';
+      }
+    });
+
+    shareWishlistForm.addEventListener('submit', function (event) {
+      event.preventDefault();
+      alert('Wishlist Shared!');
+      shareWishlistModal.style.display = 'none';
+    });
+
+    emailInput.addEventListener('input', function () {
+      if (emailInput.value.match(validRegex)) {
+        emailValidationMessage.textContent = '';
+        wishlistSubmitButton.disabled = false;
+      } else {
+        emailValidationMessage.textContent = '有効なEメールアドレスを入力してください。';
+        emailValidationMessage.style.color ="red";
+        shareEmailInput.style.border = "1px red solid";
+        wishlistSubmitButton.disabled = true;
+      }
+    });
+
+    shareWishlistForm.addEventListener('submit', function (event) {
+      event.preventDefault();
+      alert('Wishlist Shared!');
+      // You can add further logic here to handle form submission
+    });
+  });
+</script>
+
+<style>
+  .wishlist-outer-container {
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    max-width: 1180px;
+    margin: auto;
+  }
+
+  .wishlist-container-title-bar {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+    background: transparent;
+    justify-content: space-between;
+    border-bottom: 1px solid #c4c4c4;
+    padding: 16px 0;
+    height: auto;
+  }
+
+  .wishlist-main-title {
+    font-weight: 500;
+    font-size: 20px;
+    letter-spacing: 0.1em;
+    color: #434655;
+    display: block;
+  }
+
+  .wishlist-content-container {
+    margin-top: 3rem;
+    display: flex;
+    flex-wrap: wrap;
+    row-gap: 3rem;
+    width: 100%;
+    justify-items: center;
+    align-items: center;
+    justify-content: space-evenly;
+  }
+
+  .wishlist-item-box > img {
+    width: 400px !important;
+    height: auto !important;
+    object-fit: cover;
+  }
+
+  .wishlist-item-grid {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 12rem;
+    height: 100%;
+    border: 1px solid #333;
+  }
+
+  .wishlist-description {
+    background-color: #fff;
+    width: 100%;
+    height: 100%;
+    padding: 1rem 0.5rem;
+  }
+
+  .wishlist-description > small {
+    font-size: 10px;
+  }
+
+  .wishlist-common-name {
+    font-size: 10px;
+  }
+
+  .wishlist-title {
+    font-weight: bold;
+    font-size: 16px;
+  }
+
+  .wishlist-detail-header {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .setting-icon {
+    display: block;
+    width: 24px;
+    height: 24px;
+    margin-right: 1rem;
+    margin-top: 1rem;
+  }
+
+  /* Modal styles */
+  .modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    right: -24rem;
+    top: 7rem;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    padding-top: 60px;
+  }
+
+  .modal-content {
+    background-color: #fefefe;
+    margin: 5% auto;
+    padding: 15px;
+    border: 1px solid #888;
+    max-width: 200px;
+  }
+
+  .close-button {
+    color: #aaa;
+    position: absolute;
+    right: 33.5rem;
+    top: 8rem;
+    font-size: 1.5rem;
+  }
+
+  .close-share-button {
+    color: #aaa;
+    position: absolute;
+    right: 24.5rem;
+    top: 8rem;
+    font-size: 1.5rem;
+  }
+
+  .close-button:hover,
+  .close-button:focus,
+  .close-share-button:hover,
+  .close-share-button:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  .modal-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .modal-menu-content {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    font-size: 0.8rem;
+    padding-left: 1rem;
+    cursor: pointer;
+  }
+
+  .modal-menu-content:hover {
+    filter: brightness(1.75);
+  }
+
+  .modal-menu-content > svg {
+    width: 1rem;
+    height: 1rem;
+    margin-right: 0.8rem;
+  }
+
+  .content-red {
+    color: red;
+  }
+
+  .share-wishlist-modal.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+    padding-top: 60px;
+  }
+
+  .share-wishlist-modal .modal-content {
+    background-color: #fefefe;
+    margin: 5% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 500px;
+  }
+
+  #share-wishlis-form {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .wishlist-input-container {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .wishlist-input-container label {
+    font-size: 0.8rem;
+  }
+
+  .wishlist-input-container input {
+    border: 1px #ddd solid;
+    font-size: 0.8rem;
+    padding: 0.5rem;
+    width: 100%;
+  }
+
+  .wishlist-input-container textarea {
+    border: 1px #ddd solid;
+    font-size: 0.8rem;
+    padding: 0.5rem;
+    width: 100%;
+  }
+
+  #share-wishlist-form label {
+    margin-top: 10px;
+  }
+
+  #share-wishlist-form input,
+  #share-wishist-form textarea,
+  #share-wishlist-form button {
+    margin-top: 5px;
+  }
+
+  .required {
+    color: red;
+  }
+
+  .required-mark {
+    font-size: 0.8rem;
+  }
+
+  .button-container {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 21px;
+  }
+
+  #wishlist-submit {
+    background-color: #434655;
+    color: #fff;
+    padding: 0.4rem 2rem;
+  }
+
+  #wishlist-submit:disabled {
+    background-color: #dcdcdd;
+    color: #fff;
+    padding: 0.4rem 2rem;
+  }
+</style>

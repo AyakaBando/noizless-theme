@@ -1,0 +1,210 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-product",
+      "blocks": {
+        "product_meta": {
+          "type": "product_meta",
+          "settings": {
+            "show_vendor": false,
+            "show_sku": false,
+            "show_product_rating": false,
+            "show_taxes_included": false,
+            "hidden_price": true,
+            "show_tags": true,
+            "show_link": true,
+            "show_heart_link": false,
+            "show_border_bottom": false
+          }
+        },
+        "a899e21b-8dd8-4c56-8cc5-bd26e68e0d4f": {
+          "type": "description_wide",
+          "settings": {
+          }
+        },
+        "2f2c68b7-1bb3-4c12-bf05-51b37e6ceba1": {
+          "type": "product_meta",
+          "settings": {
+            "show_vendor": false,
+            "show_sku": false,
+            "show_product_rating": false,
+            "show_taxes_included": false,
+            "hidden_price": true,
+            "show_tags": true,
+            "show_link": false,
+            "show_heart_link": false,
+            "show_border_bottom": true
+          }
+        },
+        "0648f497-953f-4fe1-ae33-ae2cc6346d29": {
+          "type": "content",
+          "disabled": true,
+          "settings": {
+            "title": "商品詳細",
+            "content": "<p>{{ product.metafields.custom.product_details | metafield_tag }}<\/p>",
+            "page": ""
+          }
+        },
+        "89f86cea-3a5d-42f9-8c83-25d08deb16da": {
+          "type": "liquid",
+          "settings": {
+            "liquid": "<div class=\"Heading u-h6\">商品詳細<\/div>\n<p>{{product.metafields.custom.product_details}}<\/p>"
+          }
+        },
+        "99358bb6-e4c6-4954-8ad6-4fb058699c13": {
+          "type": "variant_look",
+          "settings": {
+          }
+        },
+        "ccd8fb04-224b-41ed-a70c-948ef688ac16": {
+          "type": "liquid",
+          "settings": {
+            "liquid": "<div class=\"Heading u-h6\">こちらの建築パーツの技術的な仕様や情報、お問い合わせ先<\/div>\n<p>\n<u><a href={{product.metafields.custom._maker_itempage_url}}>{{product.metafields.custom._maker_itempage_name}}<\/a><\/u><\/p>\n{{product.metafields.custom._telnumber}}"
+          }
+        },
+        "share_buttons": {
+          "type": "share_buttons",
+          "settings": {
+          }
+        },
+        "87d8d6f3-228f-4073-9021-dcca6ceb760e": {
+          "type": "buy_it_with",
+          "settings": {
+            "title": "関連商品"
+          }
+        },
+        "b15eb0de-7b07-4e0f-821a-eb4412605a5c": {
+          "type": "content",
+          "settings": {
+            "title": "Noizlessの使い方",
+            "content": "",
+            "page": "users-guide"
+          }
+        },
+        "3470db60-2ddb-4bab-85ff-218cf4623167": {
+          "type": "content",
+          "disabled": true,
+          "settings": {
+            "title": "ご注意点",
+            "content": "<p>ご注意点<\/p>",
+            "page": ""
+          }
+        },
+        "e1c83508-994c-4e6b-a3a8-b54e0a9a7715": {
+          "type": "content",
+          "settings": {
+            "title": "お問合せ先",
+            "content": "",
+            "page": ""
+          }
+        }
+      },
+      "block_order": [
+        "product_meta",
+        "a899e21b-8dd8-4c56-8cc5-bd26e68e0d4f",
+        "2f2c68b7-1bb3-4c12-bf05-51b37e6ceba1",
+        "0648f497-953f-4fe1-ae33-ae2cc6346d29",
+        "89f86cea-3a5d-42f9-8c83-25d08deb16da",
+        "99358bb6-e4c6-4954-8ad6-4fb058699c13",
+        "ccd8fb04-224b-41ed-a70c-948ef688ac16",
+        "share_buttons",
+        "87d8d6f3-228f-4073-9021-dcca6ceb760e",
+        "b15eb0de-7b07-4e0f-821a-eb4412605a5c",
+        "3470db60-2ddb-4bab-85ff-218cf4623167",
+        "e1c83508-994c-4e6b-a3a8-b54e0a9a7715"
+      ],
+      "settings": {
+        "image_size": "large",
+        "stack_images": false,
+        "show_thumbnails": true,
+        "enable_image_zoom": true,
+        "enable_video_looping": false
+      }
+    },
+    "16619351790cddf916": {
+      "type": "product-recommendations-grid",
+      "disabled": true,
+      "blocks": {
+        "d9ffbdbe-7038-47c6-8ce4-69e3ade6fb74": {
+          "type": "product",
+          "settings": {
+            "product": "{{ product.metafields.custom.recommended1.value }}"
+          }
+        },
+        "d747de53-cbb3-41f5-a01c-767c0739ca0f": {
+          "type": "product",
+          "settings": {
+            "product": "{{ product.metafields.custom.recommended2.value }}"
+          }
+        },
+        "f25dc804-5b0e-481b-b0ae-b56bbeeb5d96": {
+          "type": "product",
+          "settings": {
+            "product": "{{ product.metafields.custom.recommended3.value }}"
+          }
+        },
+        "81bc896a-1928-45ad-9f15-a06ed88b8c55": {
+          "type": "product",
+          "settings": {
+            "product": "{{ product.metafields.custom.recommended4.value }}"
+          }
+        }
+      },
+      "block_order": [
+        "d9ffbdbe-7038-47c6-8ce4-69e3ade6fb74",
+        "d747de53-cbb3-41f5-a01c-767c0739ca0f",
+        "f25dc804-5b0e-481b-b0ae-b56bbeeb5d96",
+        "81bc896a-1928-45ad-9f15-a06ed88b8c55"
+      ],
+      "settings": {
+        "heading": "おすすめの製品",
+        "show_product_info": true,
+        "show_vendor": false,
+        "show_color_swatch": false,
+        "grid_mobile_items_per_row": "2",
+        "grid_desktop_items_per_row": 4
+      }
+    },
+    "16619352443e226c19": {
+      "type": "recently-viewed-products-grid",
+      "settings": {
+        "title": "最近チェックした製品",
+        "show_product_info": true,
+        "show_vendor": false,
+        "show_color_swatch": false,
+        "grid_mobile_items_per_row": "2",
+        "grid_desktop_items_per_row": 4
+      }
+    },
+    "16619293198e2fd85a": {
+      "type": "blog-posts",
+      "blocks": {
+        "1661929319a4a3f7b3-0": {
+          "type": "blog",
+          "settings": {
+            "blog": "know-our-building-materials"
+          }
+        }
+      },
+      "block_order": [
+        "1661929319a4a3f7b3-0"
+      ],
+      "settings": {
+        "section_title": "おすすめのCOLUMN",
+        "subheading": "",
+        "title": "",
+        "show_category": true,
+        "show_date": true,
+        "button_link": "shopify:\/\/blogs\/know-our-building-materials",
+        "button_text": "すべてのコラムを見る",
+        "show_featured_article": true
+      }
+    }
+  },
+  "order": [
+    "main",
+    "16619351790cddf916",
+    "16619352443e226c19",
+    "16619293198e2fd85a"
+  ]
+}
