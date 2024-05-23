@@ -18,7 +18,7 @@
     {%- endif -%}
 
     <a href="{{ product.url }}" class="ProductItem__ImageWrapper {% if has_alternate_image %}ProductItem__ImageWrapper--withAlternateImage{% endif %}" style="position: relative;" >
-      {% render 'swym-product-view', product: product %} 
+      {% comment %} {% render 'swym-product-view', product: product %}  {% endcomment %}
       {% comment %}
       <button class="swym-button swym-add-to-wishlist-view-product product_{{product.id}}" data-swaction="addToWishlist" data-product-id="{{product.id | json}}"></button>
       {% endcomment %}

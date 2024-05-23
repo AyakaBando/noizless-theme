@@ -31,6 +31,7 @@
     </div>
   </div>
 
+  <div id="loading-icon"><img src="{{ 'loading.gif' | asset_url }}" alt="Loading"></div>
   <div class="wishlist-content-container"></div>
 </div>
 
@@ -107,10 +108,12 @@
       <div class="required-mark"><span class="required">*</span>は必須です</div>
 
       <div class="button-container">
-      <button type="submit" id="wishlist-submit" disabled>リストをシェアする</button>
+        <button type="submit" id="wishlistSubmit" disabled>リストをシェアする</button>
       </div>
     </form>
   </div>
+
+  <iframe id="pdf" style="width: 100%; height: 100%;"></iframe>
 </div>
 
 <script>
@@ -121,13 +124,10 @@
 
     if (wishlistItems.length > 0) {
       wishlistItems.forEach((item) => {
-        console.log(item);
-
         const priceInCents = Number(item.price);
         const priceInYen = priceInCents / 100;
         const priceText =
           priceInYen == 0 ? 'オープン価格' : priceInYen.toLocaleString('ja-JP', { style: 'currency', currency: 'JPY' });
-        console.log(priceText);
 
         const productHTML = `
           <div class="wishlist-item-grid">
@@ -143,7 +143,7 @@
               <small>メーカー</small> <br>
               <small>${item.companyName}</small> <br>
               <small>品番</small>
-              <p>${item.sku}</p>
+              <p>${item.sku ? item.sku : 'N/A'}</p>
               <small>サイズ</small>
               <p>${item.variantSize}</p>
             </div>
@@ -181,9 +181,8 @@
     const shareWishlistForm = document.getElementById('share-wishlist-form');
     const emailInput = document.getElementById('share-email');
     const emailValidationMessage = document.getElementById('email-validation-message');
-    const wishlistSubmitButton = document.getElementById('wishlist-submit');
+    const wishlistSubmitButton = document.getElementById('wishlistSubmit');
     const validRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
-    const shareEmailInput = document.getElementById("share-email");
 
     document.querySelectorAll('.modal-menu-content')[0].addEventListener('click', () => {
       shareWishlistModal.style.display = 'block';
@@ -194,34 +193,185 @@
       shareWishlistModal.style.display = 'none';
     });
 
+
     window.addEventListener('click', (event) => {
       if (event.target == shareWishlistModal) {
         shareWishlistModal.style.display = 'none';
       }
     });
 
-    shareWishlistForm.addEventListener('submit', function (event) {
+    // Create PDF
+    async function arrayBufferToBase64(buffer) {
+      let binary = '';
+      let bytes = new Uint8Array(buffer);
+      let len = bytes.byteLength;
+      for (let i = 0; i < len; i++) {
+        binary += String.fromCharCode(bytes[i]);
+      }
+      return window.btoa(binary);
+    }
+
+    shareWishlistForm.addEventListener('submit', async function (event) {
       event.preventDefault();
-      alert('Wishlist Shared!');
-      shareWishlistModal.style.display = 'none';
+
+      const loadingIcon = document.getElementById('loading-icon');
+      loadingIcon.style.display = 'block';
+
+      // Fetch wishlist items
+      let wishlistItems = JSON.parse(localStorage.getItem('wishlist')) || [];
+
+      let priceText;
+      let priceInYen;
+      if (wishlistItems.length > 0) {
+        wishlistItems.forEach((item) => {
+          let priceInCents = Number(item.price);
+          priceInYen = priceInCents / 100;
+          priceText =
+            priceInYen == 0
+              ? 'オープン価格'
+              : priceInYen.toLocaleString('ja-JP', { style: 'currency', currency: 'JPY' });
+        });
+      }
+
+      const { jsPDF } = window.jspdf;
+
+      try {
+        const fontUrl = '{{ "NotoSansJP-Medium.ttf" | asset_url }}';
+        const font = new FontFace('NotoSansJP-Medium', `url(${fontUrl})`);
+        font.load().then(() => {
+        document.fonts.add(font);
+      })
+
+        // Create a new jsPDF instance with custom dimensions
+        const doc = new jsPDF({
+          orientation: 'landscape', // 'portrait' or 'landscape'
+          unit: 'pt', // units: 'pt', 'mm', 'cm', 'in'
+          format: [2067, 1462], // width and height in specified units
+        });
+
+        // Set font to "NotoSansJP-Medium"
+        {% comment %} const response = await fetch('{{ "NotoSansJP-Medium.ttf" | asset_url }}');
+        const fontArrayBuffer = await response.arrayBuffer();
+        const fontBase64 = await arrayBufferToBase64(fontArrayBuffer);
+        const fontName = 'NotoSansJP';
+        const fontStyle = 'normal';
+        doc.addFileToVFS(`${fontName}.ttf`, fontBase64);
+        doc.addFont(`${fontName}.ttf`, fontName, fontStyle);
+        doc.setFont(fontName, fontStyle); {% endcomment %}
+
+        // Set up table data
+        const includeImage = true;
+        const includePrice = true;
+        const includeSKU = true;
+        const padding = 10;
+        let tableData = wishlistItems.map(function (item) {
+          let rowData = [(item.name)];
+          console.log(rowData)
+          if (includeImage) {
+            rowData.push({ image: item.image, width: 50 }); 
+          }
+          if (includePrice) {
+            rowData.push(priceText);
+          }
+          if (includeSKU) {
+            rowData.push(item.sku);
+          }
+          return rowData;
+        });
+
+        // Set up table parameters
+        let columns = ['Product Name'];
+        if (includeImage) {
+          columns.push('Image');
+        }
+        if (includePrice) {
+          columns.push('Price');
+        }
+        if (includeSKU) {
+          columns.push('SKU');
+        }
+
+        // Calculate row heights based on image heights
+        let rowHeights = tableData.map(function (row) {
+          let maxImageHeight = 0;
+          row.forEach(function (cell) {
+            if (cell && cell.image) {
+              let img = new Image();
+              img.src = cell.image;
+              img.onload = function () {
+                maxImageHeight = Math.max(maxImageHeight, img.height);
+              };
+            }
+          });
+          return maxImageHeight + 2 * padding; 
+        });
+
+        // Set up document properties
+        doc.setFontSize(12);
+        const fontSize = 12;
+
+        // Add table to PDF
+        doc.autoTable({
+          head: [columns],
+          body: tableData,
+          startY: 10,
+          margin: { top: 20, right: 20, bottom: 20, left: 20 },
+          styles: {
+            fontSize: fontSize,
+            font: "NotoSansJP-Medium",
+            cellPadding: padding,
+            cellHeight: 'auto',
+          },
+          didDrawCell: function (data) {
+            if (data.column.index === 1 && includeImage) {
+              const cellData = data.cell.raw;
+              if (cellData && cellData.image) {
+                let img = new Image();
+                img.src = cellData.image;
+                img.onload = function () {
+                  const cellWidth = data.cell.width - padding * 2;
+                  const cellHeight = img.height * (cellWidth / img.width);
+                  doc.addImage(
+                    cellData.image,
+                    'JPEG',
+                    data.cell.x + padding,
+                    data.cell.y + padding,
+                    cellWidth,
+                    cellHeight
+                  );
+                };
+              }
+            }
+          },
+        });
+
+        // Save the PDF
+        doc.save('wishlist.pdf');
+
+        alert('Email Successfully Sent!')
+        // Hide the loading icon after the PDF is generated
+        loadingIcon.style.display = 'none';
+      } catch (error) {
+        console.error('Error creating PDF:', error);
+        // Handle error
+        // Hide the loading icon
+        loadingIcon.style.display = 'none';
+        // Show error message to the user
+        alert('Error creating PDF. Please try again later.');
+      }
     });
 
     emailInput.addEventListener('input', function () {
       if (emailInput.value.match(validRegex)) {
         emailValidationMessage.textContent = '';
+        emailInput.style.border = '';
         wishlistSubmitButton.disabled = false;
       } else {
         emailValidationMessage.textContent = '有効なEメールアドレスを入力してください。';
-        emailValidationMessage.style.color ="red";
-        shareEmailInput.style.border = "1px red solid";
+        emailValidationMessage.style.color = 'red';
+        emailInput.style.border = '1px red solid';
         wishlistSubmitButton.disabled = true;
       }
-    });
-
-    shareWishlistForm.addEventListener('submit', function (event) {
-      event.preventDefault();
-      alert('Wishlist Shared!');
-      // You can add further logic here to handle form submission
     });
   });
 </script>
@@ -260,6 +410,7 @@
     display: flex;
     flex-wrap: wrap;
     row-gap: 3rem;
+    column-gap: 4rem;
     width: 100%;
     justify-items: center;
     align-items: center;
@@ -464,15 +615,24 @@
     margin-top: 21px;
   }
 
-  #wishlist-submit {
+  #wishlistSubmit {
     background-color: #434655;
     color: #fff;
     padding: 0.4rem 2rem;
   }
 
-  #wishlist-submit:disabled {
+  #wishlistSubmit:disabled {
     background-color: #dcdcdd;
     color: #fff;
     padding: 0.4rem 2rem;
+  }
+
+  #loading-icon {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 9999;
   }
 </style>

@@ -124,7 +124,6 @@ function isProductMetaInfoComplete(productMetaInfo) {
   );
 }
 
-
 // Function to initialize wishlist buttons with complete product meta information
 const initWishlistButtons = () => {
   const wishlistButtons = document.querySelectorAll(".wishlist-button");
@@ -149,11 +148,12 @@ const initWishlistButtons = () => {
         priceInfo: button.dataset.productPriceInfo,
         commonName: button.dataset.variantCustomCommonName,
         companyName: button.dataset.productCompanyName,
-        variantSize: button.dataset.variantSize
+        variantSize: button.dataset.variantSize,
       };
 
       console.log(productMetaInfo);
 
+      const toast = new PopToast();
       const wishlistItems = JSON.parse(localStorage.getItem("wishlist")) || [];
       const variantInWishlist = wishlistItems.find(
         (item) => item.variantId === productMetaInfo.variantId
@@ -170,7 +170,23 @@ const initWishlistButtons = () => {
             .then(() => {
               wishlistItems.push(productMetaInfo);
               localStorage.setItem("wishlist", JSON.stringify(wishlistItems));
-              console.log(productMetaInfo.title, "is added to wishlist");
+              //   shopify.toast.show("{{productMetaInfo.name}}がお気に入りリストに追加されました", {
+              //     duration: 3000,
+              //   })
+
+              toast.show(
+                productMetaInfo.name + "がお気に入りリストに追加されました。",
+                {
+                  type: "success", //success, warning, error, info
+                  duration: 3000,
+                  position: "top-left", // top-left, top-right, bottom-left, bottom-right
+                  closeable: true,
+                  style: {
+                    color: "black", 
+                  },
+                }
+              );
+              console.log(productMetaInfo.name, "is added to wishlist");
               button.classList.add("wishlist-added");
             })
             .catch((error) => {
@@ -178,6 +194,18 @@ const initWishlistButtons = () => {
             });
         }
       } else {
+        toast.show(
+            productMetaInfo.name + "はすでにお気に入りリストに追加されています。",
+            {
+              type: "error", //success, warning, error, info
+              duration: 3000,
+              position: "top-left", // top-left, top-right, bottom-left, bottom-right
+              closeable: true,
+              style: {
+                color: "black", 
+              },
+            }
+          );
         console.error(productMetaInfo.title, "is already in wishlist");
       }
     });
