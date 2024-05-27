@@ -9,8 +9,12 @@
           <div>{{ customer.email }}</div>
         {% endif %}
       {% else %}
-        <div>Debug: No customer found</div>
-        <div>Please log in to see your account details.</div>
+        <div class="guest-shopper">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+          </svg>          
+          <p>ゲストショッパー</p>
+        </div>
       {% endif %}
     </div>
   </div>
@@ -32,6 +36,14 @@
   </div>
 
   <div id="loading-icon"><img src="{{ 'loading.gif' | asset_url }}" alt="Loading"></div>
+
+  {% comment %} Wishlist Group Selector {% endcomment %}
+  <div class="wishlist-group-selector">
+  {% comment %} Default Wishlist {% endcomment %}
+<div class="wishlist-group-block" data-group-id="default">私のお気に入り</div>
+</div>
+
+  {% comment %} Wishlist {% endcomment %}
   <div class="wishlist-content-container"></div>
 </div>
 
@@ -120,8 +132,16 @@
   document.addEventListener('DOMContentLoaded', function () {
     // Select the wishlist content container
     const wishlistContentContainer = document.querySelector('.wishlist-content-container');
-    const wishlistItems = JSON.parse(localStorage.getItem('wishlist') || []);
+    let wishlistItems = [];
 
+    try {
+      const wishlistJSON = localStorage.getItem('wishlist');
+      if (wishlistJSON) {
+        wishlistItems = JSON.parse(wishlistJSON);
+      }
+    } catch (error) {
+      console.error('Error parsing wishlist data:', error);
+    }
     if (wishlistItems.length > 0) {
       wishlistItems.forEach((item) => {
         const priceInCents = Number(item.price);
@@ -153,7 +173,13 @@
         wishlistContentContainer.insertAdjacentHTML('beforeend', productHTML);
       });
     } else {
-      wishlistContentContainer.innerHTML = '<p>No items in your wishlist.</p>';
+      wishlistContentContainer.innerHTML = `
+      <div class="find-wishlist">
+        <h2 class="find-wishlist-title">お気に入りリストに追加</h2>
+        <p class="find-wishlist-content">お気に入りリストを作成すると、リストを工務店やご家族、ご友人にメール等で共有できます。<br>ITEMから「お気に入りに追加」を押してリストを作成してください。</p>
+        <button class="find-wishlist-button"><a href="/collections/all">お気に入りを探す</a></button>
+      </div>
+      `;
     }
 
     // Settings Modal functionality
@@ -192,7 +218,6 @@
     closeShareWishlistModalButton.addEventListener('click', () => {
       shareWishlistModal.style.display = 'none';
     });
-
 
     window.addEventListener('click', (event) => {
       if (event.target == shareWishlistModal) {
@@ -239,8 +264,8 @@
         const fontUrl = '{{ "NotoSansJP-Medium.ttf" | asset_url }}';
         const font = new FontFace('NotoSansJP-Medium', `url(${fontUrl})`);
         font.load().then(() => {
-        document.fonts.add(font);
-      })
+          document.fonts.add(font);
+        });
 
         // Create a new jsPDF instance with custom dimensions
         const doc = new jsPDF({
@@ -249,26 +274,16 @@
           format: [2067, 1462], // width and height in specified units
         });
 
-        // Set font to "NotoSansJP-Medium"
-        {% comment %} const response = await fetch('{{ "NotoSansJP-Medium.ttf" | asset_url }}');
-        const fontArrayBuffer = await response.arrayBuffer();
-        const fontBase64 = await arrayBufferToBase64(fontArrayBuffer);
-        const fontName = 'NotoSansJP';
-        const fontStyle = 'normal';
-        doc.addFileToVFS(`${fontName}.ttf`, fontBase64);
-        doc.addFont(`${fontName}.ttf`, fontName, fontStyle);
-        doc.setFont(fontName, fontStyle); {% endcomment %}
-
         // Set up table data
         const includeImage = true;
         const includePrice = true;
         const includeSKU = true;
         const padding = 10;
         let tableData = wishlistItems.map(function (item) {
-          let rowData = [(item.name)];
-          console.log(rowData)
+          let rowData = [item.name];
+          console.log(rowData);
           if (includeImage) {
-            rowData.push({ image: item.image, width: 50 }); 
+            rowData.push({ image: item.image, width: 50 });
           }
           if (includePrice) {
             rowData.push(priceText);
@@ -303,7 +318,7 @@
               };
             }
           });
-          return maxImageHeight + 2 * padding; 
+          return maxImageHeight + 2 * padding;
         });
 
         // Set up document properties
@@ -318,7 +333,7 @@
           margin: { top: 20, right: 20, bottom: 20, left: 20 },
           styles: {
             fontSize: fontSize,
-            font: "NotoSansJP-Medium",
+            font: 'NotoSansJP-Medium',
             cellPadding: padding,
             cellHeight: 'auto',
           },
@@ -346,9 +361,9 @@
         });
 
         // Save the PDF
-        doc.save('wishlist.pdf');
+        doc.save('Noizless Wishlist.pdf');
 
-        alert('Email Successfully Sent!')
+        alert('Email Successfully Sent!');
         // Hide the loading icon after the PDF is generated
         loadingIcon.style.display = 'none';
       } catch (error) {
@@ -464,6 +479,48 @@
     margin-right: 1rem;
     margin-top: 1rem;
   }
+
+  .find-wishlist {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: #504855;
+  gap: 2rem;
+  }
+
+  .guest-shopper {
+  display: flex;
+  align-items: center;
+}
+
+.guest-shopper > svg {
+width: 20px;
+height: 20px;
+margin-right: 0.8rem;
+}
+
+.guest-shopper > p {
+font-size: 0.9rem;
+}
+
+  .find-wishlist-title {
+  font-size: 1rem;
+  }
+
+  .find-wishlist-content {
+  font-size: 0.9rem;
+}
+
+.find-wishlist-button {
+display: block;
+background-color: #504855;
+color: #fff;
+padding: 13px 30px;
+}
+
+.find-wishlist-button:hover{
+filter: brightness(1.2); }
 
   /* Modal styles */
   .modal {
