@@ -10,9 +10,16 @@
         {% endif %}
       {% else %}
         <div class="guest-shopper">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="size-6"
+          >
             <path stroke-linecap="round" stroke-linejoin="round" d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
-          </svg>          
+          </svg>
           <p>ゲストショッパー</p>
         </div>
       {% endif %}
@@ -39,9 +46,9 @@
 
   {% comment %} Wishlist Group Selector {% endcomment %}
   <div class="wishlist-group-selector">
-  {% comment %} Default Wishlist {% endcomment %}
-<div class="wishlist-group-block" data-group-id="default">私のお気に入り</div>
-</div>
+    {% comment %} Default Wishlist {% endcomment %}
+    <div class="wishlist-group-block" data-group-id="default">私のお気に入り</div>
+  </div>
 
   {% comment %} Wishlist {% endcomment %}
   <div class="wishlist-content-container"></div>
@@ -226,6 +233,7 @@
     });
 
     // Create PDF
+    // Convert image to base64 (binary data)
     async function arrayBufferToBase64(buffer) {
       let binary = '';
       let bytes = new Uint8Array(buffer);
@@ -234,6 +242,25 @@
         binary += String.fromCharCode(bytes[i]);
       }
       return window.btoa(binary);
+    }
+
+    function getBase64ImageFromUrl(url) {
+      return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.crossOrigin = 'Anonymous';
+        img.onload = function () {
+          const canvas = document.createElement('canvas');
+          canvas.width = this.width;
+          canvas.height = this.height;
+
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(this, 0, 0);
+          const dataUrl = canvas.toDataURL('image/jpeg');
+          resolve(dataUrl);
+        };
+        img.onerror = reject;
+        img.src = url;
+      });
     }
 
     shareWishlistForm.addEventListener('submit', async function (event) {
@@ -278,6 +305,7 @@
         const includeImage = true;
         const includePrice = true;
         const includeSKU = true;
+
         const padding = 10;
         let tableData = wishlistItems.map(function (item) {
           let rowData = [item.name];
@@ -295,15 +323,15 @@
         });
 
         // Set up table parameters
-        let columns = ['Product Name'];
+        let columns = ['製品名'];
         if (includeImage) {
-          columns.push('Image');
+          columns.push('製品イメージ');
         }
         if (includePrice) {
-          columns.push('Price');
+          columns.push('金額');
         }
         if (includeSKU) {
-          columns.push('SKU');
+          columns.push('品番');
         }
 
         // Calculate row heights based on image heights
@@ -322,39 +350,63 @@
         });
 
         // Set up document properties
-        doc.setFontSize(12);
-        const fontSize = 12;
+        doc.setFontSize(16);
+        const fontSize = 16;
+
+        // Assuming `tableData` is an array of objects
+        const prefetchImages = async (tableData) => {
+          return await Promise.all(
+            tableData.map(async (item) => {
+              if (item[1] && item[1].image) {
+                item[1].imageBase64 = await getBase64ImageFromUrl(item[1].image);
+              }
+              return item;
+            })
+          );
+        };
+
+        const prefetchTableData = await prefetchImages(tableData);
+        console.log('prefetchTableData', prefetchTableData);
 
         // Add table to PDF
         doc.autoTable({
           head: [columns],
-          body: tableData,
+          body: prefetchTableData,
           startY: 10,
           margin: { top: 20, right: 20, bottom: 20, left: 20 },
+          theme: 'grid',
+          headStyles: {
+            textColor: [0, 0, 0],
+            fillColor: [255, 255, 255],
+            valign: 'middle',
+            halign: 'center',
+          },
           styles: {
             fontSize: fontSize,
             font: 'NotoSansJP-Medium',
             cellPadding: padding,
-            cellHeight: 'auto',
+            minCellHeight: 350,
+            lineColor: [0, 0, 0],
+            lineWidth: 1,
+            valign: 'middle',
+            halign: 'center',
           },
           didDrawCell: function (data) {
             if (data.column.index === 1 && includeImage) {
               const cellData = data.cell.raw;
-              if (cellData && cellData.image) {
-                let img = new Image();
-                img.src = cellData.image;
-                img.onload = function () {
-                  const cellWidth = data.cell.width - padding * 2;
-                  const cellHeight = img.height * (cellWidth / img.width);
-                  doc.addImage(
-                    cellData.image,
-                    'JPEG',
-                    data.cell.x + padding,
-                    data.cell.y + padding,
-                    cellWidth,
-                    cellHeight
-                  );
-                };
+              const max = { height: 300, width: 210 };
+              if (cellData && cellData.imageBase64) {
+                const cellWidth = data.cell.width - padding * 2;
+                const cellHeight = data.cell.height - padding * 2;
+
+                doc.addImage(
+                  cellData.imageBase64,
+                  'JPEG',
+                  data.cell.x + padding,
+                  data.cell.y + padding,
+                  cellWidth,
+                  cellHeight
+                );
               }
             }
           },
@@ -481,46 +533,47 @@
   }
 
   .find-wishlist {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  color: #504855;
-  gap: 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: #504855;
+    gap: 2rem;
   }
 
   .guest-shopper {
-  display: flex;
-  align-items: center;
-}
+    display: flex;
+    align-items: center;
+  }
 
-.guest-shopper > svg {
-width: 20px;
-height: 20px;
-margin-right: 0.8rem;
-}
+  .guest-shopper > svg {
+    width: 20px;
+    height: 20px;
+    margin-right: 0.8rem;
+  }
 
-.guest-shopper > p {
-font-size: 0.9rem;
-}
+  .guest-shopper > p {
+    font-size: 0.9rem;
+  }
 
   .find-wishlist-title {
-  font-size: 1rem;
+    font-size: 1rem;
   }
 
   .find-wishlist-content {
-  font-size: 0.9rem;
-}
+    font-size: 0.9rem;
+  }
 
-.find-wishlist-button {
-display: block;
-background-color: #504855;
-color: #fff;
-padding: 13px 30px;
-}
+  .find-wishlist-button {
+    display: block;
+    background-color: #504855;
+    color: #fff;
+    padding: 13px 30px;
+  }
 
-.find-wishlist-button:hover{
-filter: brightness(1.2); }
+  .find-wishlist-button:hover {
+    filter: brightness(1.2);
+  }
 
   /* Modal styles */
   .modal {
