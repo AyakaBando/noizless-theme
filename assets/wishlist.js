@@ -130,6 +130,7 @@ const initWishlistButtons = () => {
 
   wishlistButtons.forEach((button) => {
     button.addEventListener("click", async function () {
+        console.log(button)
       const productMetaInfo = {
         productId: button.dataset.productId,
         variantId: button.dataset.variantId,
@@ -149,6 +150,7 @@ const initWishlistButtons = () => {
         commonName: button.dataset.variantCustomCommonName,
         companyName: button.dataset.productCompanyName,
         variantSize: button.dataset.variantSize,
+        priceInfoDetails: button.dataset.productPriceDetails
       };
 
       console.log(productMetaInfo);
@@ -170,19 +172,18 @@ const initWishlistButtons = () => {
             .then(() => {
               wishlistItems.push(productMetaInfo);
               localStorage.setItem("wishlist", JSON.stringify(wishlistItems));
-              //   shopify.toast.show("{{productMetaInfo.name}}がお気に入りリストに追加されました", {
-              //     duration: 3000,
-              //   })
 
               toast.show(
-                productMetaInfo.name + "がお気に入りリストに追加されました。",
+                productMetaInfo.name +
+                  productMetaInfo.title +
+                  "がお気に入りリストに追加されました。",
                 {
                   type: "success", //success, warning, error, info
                   duration: 3000,
                   position: "top-left", // top-left, top-right, bottom-left, bottom-right
                   closeable: true,
                   style: {
-                    color: "black", 
+                    color: "black",
                   },
                 }
               );
@@ -195,17 +196,19 @@ const initWishlistButtons = () => {
         }
       } else {
         toast.show(
-            productMetaInfo.name + "はすでにお気に入りリストに追加されています。",
-            {
-              type: "error", //success, warning, error, info
-              duration: 3000,
-              position: "top-left", // top-left, top-right, bottom-left, bottom-right
-              closeable: true,
-              style: {
-                color: "black", 
-              },
-            }
-          );
+          productMetaInfo.name +
+            productMetaInfo.title +
+            "はすでにお気に入りリストに追加されています。",
+          {
+            type: "error", //success, warning, error, info
+            duration: 3000,
+            position: "top-left", // top-left, top-right, bottom-left, bottom-right
+            closeable: true,
+            style: {
+              color: "black",
+            },
+          }
+        );
         console.error(productMetaInfo.title, "is already in wishlist");
       }
     });

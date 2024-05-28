@@ -163,9 +163,9 @@
             </div>
             <div class="wishlist-description">
               <h3 class="wishlist-title">${item.name}</h3>
-              <div class="wishlist-common-name">${item.commonName}</div>
+              <div class="wishlist-common-name">${item.type}</div>
               <p>${item.title}</p>
-              <p>${priceText}</p>
+              <p>${priceText} ${item.priceInfoDetails ? item.priceInfoDetails : ''}</p>
               <div class="wishlist-common-name">${item.commonName}</div>
               <small>メーカー</small> <br>
               <small>${item.companyName}</small> <br>
@@ -414,6 +414,17 @@
 
         // Save the PDF
         doc.save('Noizless Wishlist.pdf');
+
+                // Send the email...
+  const emailSent = await sendEmail(wishlistItems); // replace with your email sending logic
+
+  if (emailSent) {
+    lockWishlist();
+    alert('Wishlist has been locked and email has been sent successfully.');
+  } else {
+    alert('Failed to send email. Please try again.');
+  }
+
 
         alert('Email Successfully Sent!');
         // Hide the loading icon after the PDF is generated
