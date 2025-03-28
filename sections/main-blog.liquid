@@ -114,6 +114,7 @@
 
           {%- render 'pagination', paginate: paginate -%}
         {%- endpaginate -%}
+
       </div>
     </div>
   {%- endif -%}
@@ -175,26 +176,18 @@
       "type": "checkbox",
       "id": "show_tags",
       "label": "Show filters",
-      "default": true
+      "default": false
     },
     {
       "type": "checkbox",
       "id": "show_featured_article",
       "label": "Show featured article",
-      "default": true
-    },
+      "default": false
+    }
+  ],
+  "presets": [
     {
-      "type": "checkbox",
-      "id": "show_category",
-      "label": "Show article category",
-      "info": "The first article's tag is used as the main category.",
-      "default": true
-    },
-    {
-      "type": "checkbox",
-      "id": "show_date",
-      "label": "Show article published date",
-      "default": true
+      "name": "Blog page"
     }
   ]
 }

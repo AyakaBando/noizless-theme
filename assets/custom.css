@@ -374,8 +374,12 @@
 }
 
 /* ブログ記事 */
+.Article__Header .Article__Title.Heading.u-h3.Heading_catch .article_title_custom {
+font-size: 28px !important;
+}
+
 .Article__Content .Rte h3 {
-    font-size: 24px;
+    font-size: 20px;
     margin: 10px 0;
 }
 
@@ -393,6 +397,10 @@
 .Article__Content .Rte img {
     margin-top: 1em;
     margin-bottom: 1em;
+}
+
+.article-img-width {
+width: 700px;
 }
 
 /* お気に入りリスト */
@@ -723,5 +731,9 @@
     white-space: normal !important;
     overflow: initial !important;
     text-overflow: initial !important;
+}
+
+#shop-hcaptcha-badge-container {
+    visibility:hidden !important;
 }
 /* 2023.9.12 add end 商品一覧でお気に入りボタン表示 */

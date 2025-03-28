@@ -18,13 +18,28 @@
 
   <div class="ArticleItem__Content">
     <div class="articleItem_meta_wrapper">
+      {% comment %}
       {%- if section.settings.show_category and article.tags.first != blank -%}
         <span class="Number u-h9">{{ article.tags.first }}</span>
       {%- endif -%}
-  
+      {% endcomment %}
+
+      {%- if article.tags.size > 0 -%}
+        <div class="ArticleItem__Categories">
+          {% for tag in article.tags %}
+            <span class="u-h9 ArticleItem__Category ArticleItem__Category--{{ tag | handleize }}">{{ tag }}</span>
+          {% endfor %}
+        </div>
+
+        <span class="Number u-h9 c-date-tag">{{ article.published_at | date: format: 'month_day_year' }}</span>
+
+      {%- endif -%}
+
+      {% comment %}
       {%- if section.settings.show_date -%}
         <span class="Number u-h9 c-date-tag">{{ article.published_at | date: format: 'month_day_year' }}</span>
       {%- endif -%}
+              {% endcomment %}
     </div>
 
 

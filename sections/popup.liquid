@@ -7,12 +7,24 @@
           "showOnlyOnce": {{ section.settings.show_only_once | json }}
         }
       {% endcapture %}
+      
+      
+      {%- if section.settings.show_only_on_PC -%}
+        <aside class="NewsletterPopup {% if section.settings.show_only_on_PC %}only-pc{% endif %}" data-section-id="{{ section.id }}" data-section-type="newsletter-popup" data-section-settings='{{ section_settings }}' aria-hidden="true">
 
-      <aside class="NewsletterPopup" data-section-id="{{ section.id }}" data-section-type="newsletter-popup" data-section-settings='{{ section_settings }}' aria-hidden="true">
+      {% comment %}} <aside class="NewsletterPopup" data-section-id="{{ section.id }}" data-section-type="newsletter-popup" data-section-settings='{{ section_settings }}' aria-hidden="true"> {% endcomment %}
         <button class="NewsletterPopup__Close" data-action="close-popup" aria-label="{{ 'general.popup.close' | t }}">{% render 'icon' with 'close' %}</button>
+<a href="{{ section.settings.popup_link_url }}" class="PopupLink">
+        {%- if section.settings.image != blank -%}
+          {% assign image_url = section.settings.image | img_url: '1x1' %}
+          {% assign image_url = image_url | replace: '_1x1.', '_400x.' %}
+          <img class="NewsletterPopup__Image" src="{{ image_url }}" alt="Newsletter Image" data-sizes="auto" />
+        {%- else -%}
+          <div>No image found</div>
+        {%- endif -%}
 
         {%- if section.settings.title != blank -%}
-          <h2 class="NewsletterPopup__Heading Heading u-h2">{{ section.settings.title | escape }}</h2>
+          <div class="NewsletterPopup__Heading Heading u-h2">{{ section.settings.title | escape }}</div>
         {%- endif -%}
 
         {%- if section.settings.content != blank -%}
@@ -27,13 +39,15 @@
               <p class="Form__Alert Alert Alert--success">{{ 'general.popup.success' | t }}</p>
             {%- else -%}
               <input type="hidden" name="contact[tags]" value="newsletter">
-
               <input type="email" name="contact[email]" class="Form__Input" required="required" aria-label="{{ 'general.popup.email_placeholder' | t }}" placeholder="{{ 'general.popup.email_placeholder' | t }}">
               <button class="Form__Submit Button Button--primary Button--full" type="submit">{{ 'general.popup.submit' | t }}</button>
             {%- endif -%}
           {%- endform -%}
         {%- endif -%}
+  </a>
       </aside>
+        {%- endif -%}
+
     {%- endunless -%}
   {%- endunless -%}
 {%- endif -%}
@@ -51,7 +65,7 @@
     {
       "type": "checkbox",
       "id": "show_only_on_index",
-      "label": "Show only on home page",
+      "label": "ホーム画面のみ表示",
       "default": true
     },
     {
@@ -68,6 +82,18 @@
       "default": true
     },
     {
+      "type": "checkbox",
+      "id": "show_only_on_PC",
+      "label": "PC画面のみ表示",
+      "default": true
+    },
+        {
+      "type": "text",
+      "id": "popup_link_url",
+      "label": "リンクURL",
+      "default": "#"
+    },
+    {
       "type": "text",
       "id": "title",
       "label": "Heading",
@@ -80,6 +106,11 @@
       "default": "<p>You can use this popup to display some useful information to your customers.</p>"
     },
     {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
       "type": "checkbox",
       "id": "show_newsletter",
       "label": "Show newsletter form",
@@ -89,12 +120,24 @@
       "type": "range",
       "id": "apparition_delay",
       "min": 0,
-      "max": 15,
+      "max": 5,
       "step": 1,
       "unit": "sec",
       "label": "Delay until the popup appears",
-      "default": 5
+      "default": 1
     }
   ]
 }
 {% endschema %}
+
+<style>
+  .NewsletterPopup.only-pc {
+    display: none;
+  }
+
+  @media (min-width: 768px) {
+    .NewsletterPopup.only-pc {
+      display: block;
+    }
+  }
+</style>

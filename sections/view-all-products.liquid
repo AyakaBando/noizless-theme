@@ -1,0 +1,77 @@
+<section class="Section Section--spacingNormal" id="section-{{ section.id }}">
+  <div class="Container">
+      {%- if section.settings.button_text != blank -%}
+      <div class="SectionFooter">
+        <a href="{{ section.settings.button_link }}" class="Button Button--primary">{{ section.settings.button_text | escape }}
+          {% render 'allow.svg' %}
+        </a>
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Shop the look",
+  "class": "shopify-section--bordered",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "For best results (especially on mobile), we recommend using images with the same dimensions."
+    },
+    {
+      "type": "text",
+      "id": "section_title",
+      "label": "Section-heading",
+      "default": "Section-heading"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Sub-heading",
+      "default": "Shop"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "Our looks"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Sub-Heading",
+      "default": "Our looks"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_mobile_product_info",
+      "label": "Show product info on mobile",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_vendor",
+      "label": "Show vendor",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "sp_padding_top0",
+      "label": "SP padding top 0",
+      "default": false
+    },
+        {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button text",
+      "default": "View all products"
+    },
+  ]
+}
+{% endschema %}

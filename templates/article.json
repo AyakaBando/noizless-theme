@@ -1,17 +1,1 @@
-{
-  "sections": {
-    "main": {
-      "type": "main-article",
-      "settings": {
-        "show_article_image": true,
-        "show_date": true,
-        "show_category": true,
-        "show_author": true,
-        "show_share_buttons": true
-      }
-    }
-  },
-  "order": [
-    "main"
-  ]
-}
+{"sections":{"main":{"type":"main-article","settings":{"show_article_image":true,"show_date":true,"show_category":true,"show_author":true,"show_share_buttons":true}}},"order":["main"]}

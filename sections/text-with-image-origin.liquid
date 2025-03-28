@@ -38,12 +38,14 @@
 
   {%- capture section_image -%}
     {%- if section.settings.image != blank -%}
-      <div class="FeatureText__ImageWrapper__origin">
+      <div class="FeatureText__ImageWrapper__origin" style="margin: 0;">
         {%- capture supported_sizes -%}{%- render 'image-size', sizes: '400,600,700,800,900,1000,1200', image: section.settings.image -%}{%- endcapture -%}
 
-        <div class="AspectRatio is-pc" style="max-width: {{ section.settings.image.width }}px; --aspect-ratio: {{ section.settings.image.aspect_ratio }}; width: {{section.settings.image_size}}%;  margin-right: auto;">
-          {%- assign image_url = section.settings.image | img_url: '1x1' | replace: '_1x1.', '_{width}x.' -%}
-          <img class="Image--lazyLoad Image--slide{{ section.settings.image_position | capitalize }}" data-src="{{ image_url }}" data-expand="-200" data-widths="[{{ supported_sizes }}]" data-sizes="auto" alt="{{ section.settings.image.alt | escape }}">
+        <!-- <div class="AspectRatio is-pc" style="max-width: {{ section.settings.image.width }}px; --aspect-ratio: {{ section.settings.image.aspect_ratio }}; width: {{section.settings.image_size}}%;  margin-right: auto;"> -->
+        <div class="is-pc" style="max-width: 377px; width: {{section.settings.image_size}}%;">
+          <!-- {%- assign image_url = section.settings.image | img_url: '1x1' | replace: '_1x1.', '_{width}x.' -%} -->
+          <!-- <img class="Image--lazyLoad Image--slide{{ section.settings.image_position | capitalize }}" data-src="{{ image_url }}" data-expand="-200" data-widths="[{{ supported_sizes }}]" data-sizes="auto" alt="{{ section.settings.image.alt | escape }}"> -->
+          <img class="Image--lazyLoad Image--slide{{ section.settings.image_position | capitalize }}" data-src="{{ image_url }}" data-widths="[{{ supported_sizes }}]" data-sizes="auto" alt="{{ section.settings.image.alt | escape }}">
 
           <noscript>
             <img src="{{ section.settings.image | img_url: '800x' }}" alt="{{ section.settings.image.alt | escape }}">

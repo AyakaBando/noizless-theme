@@ -214,6 +214,14 @@
     <button class="ShopTheLook__ViewButton Button Button--primary" aria-haspopup="true" aria-expanded="false" aria-controls="block-{{ section.blocks.first.id }}-popover" data-action="open-look">
       {{- 'home_page.shop_the_look.view_products' | t -}}
     </button>
+
+    {%- if section.settings.button_text != blank -%}
+      <div class="SectionFooter">
+        <a href="{{ section.settings.button_link }}" class="Button Button--primary">{{ section.settings.button_text | escape }}
+          {% render 'allow.svg' %}
+        </a>
+      </div>
+    {%- endif -%}
   </div>
 </section>
 
@@ -346,7 +354,18 @@
       "id": "sp_padding_top0",
       "label": "SP padding top 0",
       "default": false
-    }
+    },
+        {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button text",
+      "default": "View all products"
+    },
   ],
   "blocks": [
     {

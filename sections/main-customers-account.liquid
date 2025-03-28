@@ -5,13 +5,24 @@
         {%- render block -%}
 
       {%- when 'header' -%}
-        <header class="PageHeader" {{ block.shopify_attributes }}>
-          <a href="{{ routes.account_logout_url }}" class="PageHeader__Back Heading Text--subdued Link Link--primary u-h7">{{ 'customer.account.logout' | t }}</a>
+        <header class="PageHeader" style="display: flex; justify-content: space-between; align-items: center;" {{ block.shopify_attributes }}>
 
           <div class="SectionHeader">
-            <h1 class="SectionHeader__Heading Heading u-h1">{{ 'customer.account.title' | t }} <br><a href="/account?view=edit" style="font-size: 14px;">アカウント情報の編集</a></h1>
+            <h1 class="SectionHeader__Heading Heading u-h1">{{ 'customer.account.title' | t }}</h1>
             <p class="SectionHeader__Description">{{ customer.last_name }} {{ customer.first_name }} 様</p>
+            <p class="SectionHeader__Description">メールアドレス：　{{ customer.email }}</p>
           </div>
+
+          <div>
+            <a href="{{ routes.account_logout_url }}" class="PageHeader__Back Heading Text--subdued myAccountLogout" id="wishlistLogoutButton">{{ 'customer.account.logout' | t }}</a>
+
+          {%- comment -%}
+              <p  class="SectionHeader__Description"><a href="https://noizless.jp/tools/customr/edit-account">アカウント情報の編集</a></p>{%- endcomment -%}
+          </div>
+
+
+
+          
         </header>
 
       {%- when 'order_list' -%}

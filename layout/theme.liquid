@@ -1,23 +1,14 @@
 <!doctype html>
 
 <html class="no-js" lang="{{ request.locale.iso_code }}">
-  <head>
-    {% render 'pagefly-head' %}
-    <meta charset="utf-8">
+  <head>{% render 'pagefly-head' %}
+    <meta charset="utf-8"> 
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, height=device-height, minimum-scale=1.0, maximum-scale=1.0"
-    >
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, height=device-height, minimum-scale=1.0, maximum-scale=1.0">
     <meta name="theme-color" content="{{ settings.accent_color }}">
 
     <title>
-      {{ page_title }}
-      {% if current_tags -%}
-        {%- assign meta_tags = current_tags | join: ', ' %} &ndash; {{ 'general.meta.tags' | t: tags: meta_tags -}}
-      {%- endif %}
-      {% if current_page != 1 %} &ndash; {{ 'general.meta.page' | t: page: current_page }}{% endif %}
-      {% unless page_title contains shop.name %} &ndash; {{ shop.name }}{% endunless %}
+      {{ page_title }}{% if current_tags %}{% assign meta_tags = current_tags | join: ', ' %} &ndash; {{ 'general.meta.tags' | t: tags: meta_tags }}{% endif %}{% if current_page != 1 %} &ndash; {{ 'general.meta.page' | t: page: current_page }}{% endif %}{% unless page_title contains shop.name %} &ndash; {{ shop.name }}{% endunless %}
     </title>
 
     {%- if page_description -%}
@@ -33,47 +24,35 @@
     {% render 'social-meta-tags' %}
     {% render 'css-variables' %}
 
-    <link
-      rel="apple-touch-icon"
-      href="https://cdn.shopify.com/s/files/1/0590/5118/0169/files/Noizless-homeicon.png?v=1667907328"
-      sizes="180x180"
-    >
-    <link
-      rel="icon"
-      type="image/png"
-      href="https://cdn.shopify.com/s/files/1/0590/5118/0169/files/Noizless-homeicon.png?v=1667907328"
-      sizes="192x192"
-    >
+      <link rel="apple-touch-icon" href="https://cdn.shopify.com/s/files/1/0590/5118/0169/files/Noizless-homeicon.png?v=1667907328" sizes="180x180">
+      <link rel="icon" type="image/png" href="https://cdn.shopify.com/s/files/1/0590/5118/0169/files/Noizless-homeicon.png?v=1667907328" sizes="192x192">
 
     {{ content_for_header }}
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-      href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;500;600;700&display=swap"
-      rel="stylesheet"
-    >
-      <link rel="preconnect" href="https://fonts.googleapis.com">
-      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-      <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="{{ 'theme.css' | asset_url }}">
     <link rel="stylesheet" href="{{ 'custom-blog.css' | asset_url }}">
     <link rel="stylesheet" href="{{ 'custom.css' | asset_url }}">
 
-    <script
-      src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
-      defer
-      integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
-      crossorigin="anonymous"
-    ></script>
-    <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"
-      defer
-      integrity="sha384-fbbOQedDUMZZ5KreZpsbe1LCZPVmfTnH7ois6mU1QK+m14rQ1l2bGBq41eYeM/fS"
-      crossorigin="anonymous"
-    ></script>
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="{{ 'script.js?20241105' | asset_url }}" defer="defer"></script>
+    <script defer="defer" src="https://unpkg.com/pdf-lib/dist/pdf-lib.js"></script>
+    <script src="{{ 'fontkit.umd.min.js' | asset_url }}" defer="defer"></script>
+    <script defer="defer" src="https://apis.google.com/js/api.js"></script>
+    <script defer="defer" src="https://accounts.google.com/gsi/client"></script>
+    <script>
+      const fontUrl = "{{ 'yumindb.ttf' | asset_url }}";
+    </script>
+    <script>
+      const logoImgSrc = "{{ 'logo.png' | asset_url }}";
+    </script>
+    <script>
+      const externalLinkImgSrc = "{{ 'External_link.png' | asset_url }}";
+    </script>
+    
     <script>
       {%- if request.page_type == 'policy' -%}
         document.addEventListener('DOMContentLoaded', function() {
@@ -153,10 +132,14 @@
     <script src="{{ 'libs.min.js' | asset_url }}" defer></script>
     <script src="{{ 'theme.js' | asset_url }}" defer></script>
     <script src="{{ 'custom.js' | asset_url }}" defer></script>
-    <script src="{{ 'wishlist.js' | asset_url }}" defer></script>
+    {%- if template == "page.swym" -%}
+      <script src="{{ 'swym-custom-wishlist.js' | asset_url }}" defer></script>
+    {%- endif -%}
+    
+
     <script>
       (function () {
-        window.onpageshow = function () {
+        window.onpageshow = function() {
           if (window.theme.showPageTransition) {
             var pageTransition = document.querySelector('.PageTransition');
 
@@ -167,28 +150,24 @@
           }
 
           // When the page is loaded from the cache, we have to reload the cart content
-          document.documentElement.dispatchEvent(
-            new CustomEvent('cart:refresh', {
-              bubbles: true,
-            })
-          );
+          document.documentElement.dispatchEvent(new CustomEvent('cart:refresh', {
+            bubbles: true
+          }));
         };
       })();
     </script>
 
     {% render 'microdata-schema' %}
-    <script
-      src="https://code.jquery.com/jquery-3.6.0.min.js"
-      integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
-      crossorigin="anonymous"
-    ></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous" defer></script>
     <link rel="stylesheet" href="/path/to/flickity.css" media="screen">
-    <script src="/path/to/flickity.pkgd.min.js"></script>
+    <script src="/path/to/flickity.pkgd.min.js" defer></script>
+  
+ <!--begin-boost-pfs-filter-css-->
+   {% render 'boost-pfs-style' %}
+ <!--end-boost-pfs-filter-css-->
 
-    <!-- begin-boost-pfs-filter-css -->
-    {% render 'boost-pfs-style' %}
-    <!-- end-boost-pfs-filter-css -->
-  </head>
+ 
+</head>
 
   {%- capture classes -%}features--heading-{{ settings.heading_size }}{%- endcapture -%}
 
@@ -250,26 +229,17 @@
 
       {% section 'footer' %}
     </div>
+  
+{% include 'swymSnippet' %}
+{% include 'swym-header-counter'%}
+{%include 'swym-custom'%}
 
-    {% render 'wishlist-header-counter' %}
-    {% render 'wishlist-custom' %}
-    {% render 'product-view' %}
 
-    <!-- begin-boost-pfs-js -->
-    {% render 'boost-pfs' %}
-    <!-- end-boost-pfs-js -->
+ <!--begin-boost-pfs-js-->
+   {% render 'boost-pfs' %}
+ <!--end-boost-pfs-js-->
 
-    {% render 'price-rounding' %}
-
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js" defer></script>
-
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/AbeShunyah/PopToastJS@main/poptoast.min.css">
-    <script src="https://cdn.jsdelivr.net/gh/AbeShunyah/PopToastJS@main/poptoast.min.js" defer></script>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js" defer></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js" integrity="sha512-2/YdOMV+YNpanLCF5MdQwaoFRVbTmrJ4u4EpqS/USXAQNUDgI5uwYi6J98WVtJKcfe1AbgerygzDFToxAlOGEQ==" crossorigin="anonymous" referrerpolicy="no-referrer" defer></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/encoding-japanese/2.1.0/encoding.min.js" defer></script>  </body>
-
-    <script src={{ 'NotoSansJP-Medium-normal.js' | asset_url }} defer></script>
+    {% render 'price-rounding' %} 
+    {% render 'swymSnippet' %}
+</body>
 </html>

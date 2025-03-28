@@ -31,6 +31,16 @@
     justify-content: space-between;
     margin-bottom:10px;
 }
+
+.blogDisplayNone {
+    display: none;
+}
+
+.Article__Title {
+font-size: 24px;
+}
+
+
 @media screen and (min-width: 1008px) {
     .Blog .Grid__Cell.c-Is-First .ArticleItem{
         display: flex;

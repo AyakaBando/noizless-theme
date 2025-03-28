@@ -1,3 +1,12 @@
+/*
+* ------------------------------------------------------------
+* IMPORTANT: The contents of this file are auto-generated.
+*
+* This file may be updated by the Shopify admin language editor
+* or related systems. Please exercise caution as any changes
+* made to this file may be overwritten.
+* ------------------------------------------------------------
+*/
 {
   "404": {
     "general": {
@@ -27,7 +36,7 @@
       "close": "閉じる",
       "email_placeholder": "あなたのメールアドレス",
       "submit": "申し込む",
-      "success": "ニュースレターにご購読ありがとうございます"
+      "success": "ニュースレターのご購読ありがとうございます"
     },
     "password": {
       "enter_password": "パスワードでログインする",
@@ -49,7 +58,7 @@
   "header": {
     "general": {
       "locale": "言語",
-      "country": "国\/地域"
+      "country": "国/地域"
     },
     "navigation": {
       "title": "メインメニュー",
@@ -69,7 +78,7 @@
   "footer": {
     "general": {
       "locale": "言語",
-      "country": "国\/地域"
+      "country": "国/地域"
     },
     "newsletter": {
       "success": "ニュースレターのご購読ありがとうございます。",
@@ -176,7 +185,7 @@
       "no_orders_content": "まだ注文していません",
       "no_addresses_title": "住所なし",
       "no_addresses_content": "現在住所は保存されていません",
-      "default_address": "デフォルトの住所",
+      "default_address": "既定の住所",
       "edit_addresses": "住所を編集する",
       "manage_addresses": "住所を管理する"
     },
@@ -202,8 +211,8 @@
       "back_to_account": "アカウントに戻る",
       "cancelled_at": "注文がキャンセルされた日付 {{ date }}",
       "placed_at": "{{date}}の注文",
-      "fulfillment_html": "注文が送信されました。 番号{{tracking_number}}で荷物を追跡するか、ここをクリックしてください： <a href=\"{{tracking_url}}\" class=\"Link Link--underlineNative\" target=\"_blank\">{{tracking_url}}<\/a>",
-      "line_fulfillment_html": "製品 \"{{product_title}}\" が送信されました。番号　{{tracking_number}}で貨物を追跡するか、ここをクリックしてください： <a href=\"{{tracking_url}}\" class=\"Link Link--underlineNative\" target=\"_blank\">{{tracking_url}}<\/a>",
+      "fulfillment_html": "注文が送信されました。 番号{{tracking_number}}で荷物を追跡するか、ここをクリックしてください： <a href=\"{{tracking_url}}\" class=\"Link Link--underlineNative\" target=\"_blank\">{{tracking_url}}</a>",
+      "line_fulfillment_html": "製品 \"{{product_title}}\" が送信されました。番号　{{tracking_number}}で貨物を追跡するか、ここをクリックしてください： <a href=\"{{tracking_url}}\" class=\"Link Link--underlineNative\" target=\"_blank\">{{tracking_url}}</a>",
       "product": "商品",
       "quantity": "量",
       "line_price": "合計",
@@ -241,15 +250,15 @@
       "submit": "パスワードをリセットする"
     },
     "addresses": {
-      "title": "私のアドレス",
+      "title": "登録住所",
       "empty": "住所はまだ保存されていません",
       "edit": "編集",
       "delete": "削除",
       "add_address": "新しい住所を追加する",
       "edit_address": "住所を編集する",
       "form_subtitle": "以下の情報を入力してください：",
-      "default_address_label": "デフォルトの住所",
-      "address_label": "{{position}} アドレス",
+      "default_address_label": "既定の住所",
+      "address_label": "その他の住所",
       "first_name": "名",
       "last_name": "姓",
       "company": "会社名",
@@ -260,7 +269,7 @@
       "province": "都道府県",
       "zip": "郵便番号",
       "phone": "電話番号",
-      "set_default": "この住所をデフォルトとして設定する"
+      "set_default": "既定の住所として設定する"
     },
     "register": {
       "title": "新規登録",
@@ -310,7 +319,7 @@
     "general": {
       "view_in_space": "あなたの空間で見る",
       "include_taxes": "税込み",
-      "shipping_policy_html": "<a href=\"{{ link }}\" class=\"link link--accented\">送料計算済み<\/a> チェックアウト時",
+      "shipping_policy_html": "<a href=\"{{ link }}\" class=\"link link--accented\">送料計算済み</a> チェックアウト時",
       "reviews_count": {
         "zero": "{{ count }}件",
         "one": "{{ count }}件",
@@ -327,7 +336,7 @@
       "close": "閉じる（Esc）",
       "previous": "前へ（left arrow）",
       "next": "次へ（right arrow）",
-      "image_loading_error": "この画像を読み込めませんでした。 ページをリロードしてください。"
+      "image_loading_error": "この画像を読み込めませんでした。 ページを再読み込みしてください。"
     },
     "form": {
       "variant_label": "バリアント",
@@ -363,8 +372,8 @@
       "check_other_stores": "別のストアでの出品状況を確認する",
       "pick_up_available": "受取が可能です",
       "pick_up_currently_unavailable": "受取は現在できません",
-      "pick_up_available_at_html": "<strong>{{ location_name }}<\/strong>での受取が可能です",
-      "pick_up_unavailable_at_html": "<strong>{{ location_name }}<\/strong>での受取は現在できません"
+      "pick_up_available_at_html": "<strong>{{ location_name }}</strong>での受取が可能です",
+      "pick_up_unavailable_at_html": "<strong>{{ location_name }}</strong>での受取は現在できません"
     }
   },
   "gift_card": {
@@ -386,7 +395,7 @@
     "general": {
       "no_articles": "ブログ{{blog_title}}は空です",
       "empty_button": "ホームページに戻る",
-      "all_tag": "COLUMN",
+      "all_tag": "すべて",
       "view_all": "すべてのコラム"
     },
     "article": {
@@ -424,7 +433,7 @@
   },
   "date_formats": {
     "month_day_year": "%Y.%m.%d",
-    "month_day_year_short": "%Y\/%m\/%d",
+    "month_day_year_short": "%Y/%m/%d",
     "month_day_year_time": "%Y年 %B %d日 at %I:%M%p"
   },
   "pagefly": {
@@ -470,6 +479,11 @@
       "signup_form_email_label": "Email",
       "signup_form_success": "We will send you an email right before we open!",
       "password_link": "Enter using password"
+    }
+  },
+  "customer_accounts": {
+    "order_details": {
+      "marketing_checkbox_label": "お知らせメールを受け取る"
     }
   }
 }

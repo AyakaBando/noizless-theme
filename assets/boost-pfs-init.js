@@ -11,5 +11,5 @@ if (typeof boostPFSConfig != 'undefined'
 } 
 BoostPFS.jQ(window).on('load', function(){
 	boostPFS.initSearchBox();
-	boostPFS.initAnalytics();
+	// boostPFS.initAnalytics();
 });

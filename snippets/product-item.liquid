@@ -1,116 +1,68 @@
-{%- if request.page_type == 'collection' or request.page_type == 'search' -%}
-  <div id="easyModal--{{ product.id }}" class="c-swym-button__modal">
-    <div class="c-swym-button__modal-content">
-      <div class="c-swym-button__modal-header">
-        <span class="modal-title">お気に入りに追加</span>
-        <span class="modalClose" id="easyModalClose--{{ product.id }}">×</span>
-      </div>
-      <div class="c-swym-button__modal-body">
-        {% for variant in product.variants %}
-          <div class="variant_look">
+{%- if request.page_type == "collection" or request.page_type == "search" -%}
+<div id="easyModal--{{ product.id }}" class="c-swym-button__modal">
+  <div class="c-swym-button__modal-content">
+    <div class="c-swym-button__modal-header">
+      <span class="modal-title">お気に入りに追加</span>
+      <span class="modalClose" id="easyModalClose--{{ product.id }}">×</span>
+    </div>
+    <div class="c-swym-button__modal-body">
+      {% for variant in product.variants %}
+        <div class="variant_look">
             <div class="color_option_wrapper">
               {% unless product.has_only_default_variant %}
-                <img class="variant_option_image" src="{{variant.featured_image | img_url: 'small'}}">
-              {% endunless %}
+                <img class="variant_option_image" src={{variant.featured_image | img_url: 'small'}} />
+              {%endunless%}
               {% if product.has_only_default_variant %}
-                <img class="variant_option_image" src="{{product.featured_image | img_url: 'small'}}/">
+                <img class="variant_option_image" src={{product.featured_image | img_url: 'small'}}/>
               {% endif %}
-
+              
               <div class="option_wrapper">
                 {% unless product.has_only_default_variant %}
                   {% if variant.option1 %}
-                    <span class="u-h9">{{ variant.option1 }}</span>
+                  <span class="u-h9">{{ variant.option1 }}</span>
                   {% endif %}
-                {% endunless %}
+                {%endunless%}
                 {% if product.has_only_default_variant %}
                   <span class="u-h9">{{ product.title }}</span>
-                {% endif %}
-
+                {%endif%}
+                
                 {% if variant.option2 %}
-                  <span class="u-h9"> - {{ variant.option2 }}</span>
+                <span class="u-h9"> - {{ variant.option2 }}</span>
                 {% endif %}
-
+                
                 {% if variant.option3 %}
-                  <span class="u-h9"> - {{ variant.option3 }}</span>
+                <span class="u-h9"> - {{ variant.option3 }}</span>
                 {% endif %}
 
                 <div class="u-h9">
-                  {{ variant.sku }}
+                  {{variant.sku}}
                 </div>
+                
               </div>
             </div>
-            <!-- Swym Wishlist Plus EPI Button -->
-            {% comment %}
-              <label for="{{variant.id}}" class="wish-list-button">
-                <button id="{{variant.id}}" data-with-epi="true" class="swym-hear-custom-look swym-button swym-add-to-wishlist-view-product product_{{product.id}}" data-swaction="addToWishlist" data-product-id="{{product.id | json}}" data-variant-id="{{variant.id}}" data-product-url="{{ shop.url }}{{ product.url }}"></button>
-                <span class="u-h10">お気に入りに追加</span>
-              </label>
-            {% endcomment %}
-            <!-- Swym Wishlist Plus EPI Button -->
-
-            {% comment %} Wishlist Button {% endcomment %}
-            {% assign variant = product.selected_or_first_available_variant %}
-
-            <label for="wishlist_{{ variant.id }}" class="wish-list-button u-h10">
-              <button
-                id="wishlist_{{ variant.id }}"
-                class="wishlist-button add-to-wishlist"
-                data-variant-id="{{ variant.id }}"
-                data-product-id="{{ product.id }}"
-                data-variant-title="{{ variant.title }}"
-                data-variant-price="{{ variant.price }}"
-                data-variant-sku="{{ variant.sku }}"
-                data-variant-image="{{ image }}"
-                data-product-name="{{ product.title }}"
-                data-product-size="{{ variant.size }}"
-                data-prodcut-category="{{ product.category }}"
-                data-product-manufacturer-url="{{ product.manufacturer-url }}"
-                data-product-manufaturer-name="{{ product.manufacturer-name }}"
-                data-product-contact-number="{{ product.contact-number }}"
-                data-product-details="{{ product.custom.details }}"
-                data-product-type="{{ product.type }}"
-                data-product-price-info="{{ variant.price }}"
-                data-custom-attribute="custom-value"
-              >
-                <div class="svg-wrapper">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart" viewBox="0 0 16 16" style="color: #fff;">
-                    <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z"/>
-                    </svg>
-                  </div>
-                </button>
-                <span class="u-h10">お気に入りに追加</span>
+            <!-- Swym Wishlist Plus EPI Button-->
+            <label for="{{variant.id}}" class="wish-list-button">
+              <button id="{{variant.id}}" data-with-epi="true" class="swym-hear-custom-look swym-button swym-add-to-wishlist-view-product product_{{product.id}}" data-swaction="addToWishlist" data-product-id="{{product.id | json}}" data-variant-id="{{variant.id}}" data-product-url="{{ shop.url }}{{ product.url }}"></button>
+              <span class="u-h10">お気に入りに追加</span>
             </label>
-            
-             {% comment %} End Wishlist Button {% endcomment %}
-          </div>
-        {% endfor %}
-      </div>
+           <!-- Swym Wishlist Plus EPI Button-->
+        </div>
+      {% endfor %}
     </div>
   </div>
+</div>
 {%- endif -%}
 
 <div class="ProductItem {% if use_horizontal %}ProductItem--horizontal{% endif %}">
   <div class="ProductItem__Wrapper ok1">
-    {%- if request.page_type == 'collection' or request.page_type == 'search' -%}
-      <button
-        data-with-epi="true"
-        class="swym-button swym-add-to-wishlist-view-product product_{{ product.id }}"
-        data-swaction="addToWishlist"
-        data-product-id="{{ product.id}}"
-        data-variant-id="{{ product.selected_or_first_available_variant.id }}"
-        data-product-url="{{ product.url }}"
-      ></button>
-      <button
-        type="button"
-        class="c-swym-button__open-modal swym-button swym-add-to-wishlist-view-product product_{{ product.id }}"
-        data-product_id="{{ product.id }}"
-        onclick="openWishlistModal('easyModal--{{ product.id }}','easyModalClose--{{ product.id }}')"
-      ></button>
+    {%- if request.page_type == "collection" or request.page_type == "search" -%}
+      <button data-with-epi="true" class="swym-button swym-add-to-wishlist-view-product product_{{ product.id }}" data-swaction="addToWishlist" data-product-id="{{ product.id}}" data-variant-id="{{ product.selected_or_first_available_variant.id }}" data-product-url="{{ product.url }}"></button>
+      <button type="button" class="c-swym-button__open-modal swym-button swym-add-to-wishlist-view-product product_{{ product.id }}"  data-product_id="{{ product.id }}" onclick="openWishlistModal('easyModal--{{ product.id }}','easyModalClose--{{ product.id }}')"></button>
     {%- endif -%}
-
+    
     {%- comment -%}
-      We are using LazySizes to efficiently choose the most appropriate image in the set. However, because internally LazySizes uses srcset, we need to make
-      sure that the image sizes we offer is not larger than the max size uploaded by the merchants.
+    We are using LazySizes to efficiently choose the most appropriate image in the set. However, because internally LazySizes uses srcset, we need to make
+    sure that the image sizes we offer is not larger than the max size uploaded by the merchants.
     {%- endcomment -%}
 
     {%- if settings.product_image_size == 'natural' or use_horizontal -%}
@@ -125,14 +77,10 @@
       {%- assign has_alternate_image = false -%}
     {%- endif -%}
 
-    <a
-      href="{{ product.url }}"
-      class="ProductItem__ImageWrapper {% if has_alternate_image %}ProductItem__ImageWrapper--withAlternateImage{% endif %}"
-      style="position: relative;"
-    >
+    <a href="{{ product.url }}" class="ProductItem__ImageWrapper {% if has_alternate_image %}ProductItem__ImageWrapper--withAlternateImage{% endif %}" style="position: relative;" >
       {% comment %}
-        {% render 'swym-product-view', product: product %}
-        <button class="swym-button swym-add-to-wishlist-view-product product_{{product.id}}" data-swaction="addToWishlist" data-product-id="{{product.id | json}}"></button>
+      {% render 'swym-product-view', product: product %} 
+      <button class="swym-button swym-add-to-wishlist-view-product product_{{product.id}}" data-swaction="addToWishlist" data-product-id="{{product.id | json}}"></button>
       {% endcomment %}
       {%- if use_horizontal -%}
         {%- assign max_width = 125 -%}
@@ -140,17 +88,12 @@
         {%- assign max_width = product.featured_media.preview_image.width -%}
       {%- endif -%}
 
-      {%- assign media_aspect_ratio = product.featured_media.aspect_ratio
-        | default: product.featured_media.preview_image.aspect_ratio
-      -%}
+      {%- assign media_aspect_ratio = product.featured_media.aspect_ratio | default: product.featured_media.preview_image.aspect_ratio -%}
 
-      <div
-        class="AspectRatio AspectRatio--{% if use_natural_size %}withFallback{% else %}{{ settings.product_image_size }}{% endif %}"
-        style="max-width: {{ max_width }}px; {% if use_natural_size %}padding-bottom: {{ 100.0 | divided_by: media_aspect_ratio }}%;{% endif %} --aspect-ratio: {{ media_aspect_ratio }}"
-      >
+      <div class="AspectRatio AspectRatio--{% if use_natural_size %}withFallback{% else %}{{ settings.product_image_size }}{% endif %}" style="max-width: {{ max_width }}px; {% if use_natural_size %}padding-bottom: {{ 100.0 | divided_by: media_aspect_ratio }}%;{% endif %} --aspect-ratio: {{ media_aspect_ratio }}">
         {%- comment -%}
-          IMPLEMENTATION NOTE: The alternate image (not visible by default) should be the first in the DOM, as the spinner (Image__Loader element) is
-          displayed based on the immediately previously shown image.
+        IMPLEMENTATION NOTE: The alternate image (not visible by default) should be the first in the DOM, as the spinner (Image__Loader element) is
+        displayed based on the immediately previously shown image.
         {%- endcomment -%}
 
         {%- if has_alternate_image -%}
@@ -158,40 +101,18 @@
 
           {%- assign image_url = product.media[1] | img_url: '1x1' | replace: '_1x1.', '_{width}x.' -%}
 
-          <img
-            class="ProductItem__Image ProductItem__Image--alternate Image--lazyLoad Image--fadeIn"
-            data-src="{{ image_url }}"
-            data-widths="[{{ supported_sizes }}]"
-            data-sizes="auto"
-            alt="{{ product.media[1].alt | escape }}"
-            data-media-id="{{ product.media[1].id }}"
-          >
+          <img class="ProductItem__Image ProductItem__Image--alternate Image--lazyLoad Image--fadeIn" data-src="{{ image_url }}" data-widths="[{{ supported_sizes }}]" data-sizes="auto" alt="{{ product.media[1].alt | escape }}" data-media-id="{{ product.media[1].id }}">
         {%- endif -%}
 
         {%- capture supported_sizes -%}{%- render 'image-size', sizes: '200,400,600,700,800,900,1000,1200', image: product.featured_media -%}{%- endcapture -%}
         {%- assign image_url = product.featured_media | img_url: '1x1' | replace: '_1x1.', '_{width}x.' -%}
 
-        <img
-          class="ProductItem__Image Image--lazyLoad Image--fadeIn"
-          data-src="{{ image_url }}"
-          data-widths="[{{ supported_sizes }}]"
-          data-sizes="auto"
-          alt="{{ product.featured_media.alt | escape }}"
-          data-media-id="{{ product.featured_media.id }}"
-        >
+        <img class="ProductItem__Image Image--lazyLoad Image--fadeIn" data-src="{{ image_url }}" data-widths="[{{ supported_sizes }}]" data-sizes="auto" alt="{{ product.featured_media.alt | escape }}" data-media-id="{{ product.featured_media.id }}">
         <span class="Image__Loader"></span>
 
         <noscript>
-          <img
-            class="ProductItem__Image ProductItem__Image--alternate"
-            src="{{ product.media[1] | img_url: '600x' }}"
-            alt="{{ product.media[1].alt | escape }}"
-          >
-          <img
-            class="ProductItem__Image"
-            src="{{ product.featured_media| img_url: '600x' }}"
-            alt="{{ product.featured_media.alt | escape }}"
-          >
+          <img class="ProductItem__Image ProductItem__Image--alternate" src="{{ product.media[1] | img_url: '600x' }}" alt="{{ product.media[1].alt | escape }}">
+          <img class="ProductItem__Image" src="{{ product.featured_media| img_url: '600x' }}" alt="{{ product.featured_media.alt | escape }}">
         </noscript>
       </div>
     </a>
@@ -227,17 +148,17 @@
           {%- if show_vendor -%}
             <div class="ProductItem__Vendor u-h8">{{ product.vendor }}</div>
           {%- endif -%}
-
+  
           <div class="ProductPage_label">
             {% for tag in product.tags %}
               {% if tag contains 'label__面' %}
-                <div class="ProductPage_labelItem men">{{ tag | remove: 'label__' }}</div>
+                <div class="ProductPage_labelItem men">{{ tag | remove: "label__" }}</div>
               {% endif %}
               {% if tag contains 'label__線' %}
-                <div class="ProductPage_labelItem sen">{{ tag | remove: 'label__' }}</div>
+                <div class="ProductPage_labelItem sen">{{ tag | remove: "label__" }}</div>
               {% endif %}
               {% if tag contains 'label__点' %}
-                <div class="ProductPage_labelItem ten">{{ tag | remove: 'label__' }}</div>
+                <div class="ProductPage_labelItem ten">{{ tag | remove: "label__" }}</div>
               {% endif %}
             {% endfor %}
           </div>
@@ -248,29 +169,27 @@
         </h2>
 
         {%- comment -%}2023.9.12 Add メタフィールド表示{%- endcomment -%}
-        {% comment %}
-          {%- liquid
-            assign product_meta_data = ""
-            if product.metafields.custom["size"] != blank
-              assign product_meta_data = product_meta_data | append: " | " | append: product.metafields.custom["size"]
-            endif
-            if product.metafields.custom["category"].value.title != blank
-              assign product_meta_data = product_meta_data | append: " | " | append: product.metafields.custom["category"].value.title
-            endif
-            if product.metafields.custom["_maker_itempage_name"] != blank
-              assign product_meta_data = product_meta_data | append: " | " | append: product.metafields.custom["_maker_itempage_name"]
-            endif
-            if product.metafields.custom["product_type"] != blank
-              assign product_meta_data = product_meta_data | append: " | " | append: product.metafields.custom["product_type"]
-            endif
-            assign product_meta_data = product_meta_data | remove_first: " | "
-          -%}
-          {%- if product_meta_data != "" -%}
-            <div class="ProductItem__type u-h8">
-              {{ product_meta_data }}
-            </div>
-          {%- endif -%}
-        {% endcomment %}
+        {% comment %} {%- liquid
+          assign product_meta_data = ""
+          if product.metafields.custom["size"] != blank
+            assign product_meta_data = product_meta_data | append: " | " | append: product.metafields.custom["size"]
+          endif
+          if product.metafields.custom["category"].value.title != blank
+            assign product_meta_data = product_meta_data | append: " | " | append: product.metafields.custom["category"].value.title
+          endif
+          if product.metafields.custom["_maker_itempage_name"] != blank
+            assign product_meta_data = product_meta_data | append: " | " | append: product.metafields.custom["_maker_itempage_name"]
+          endif
+          if product.metafields.custom["product_type"] != blank
+            assign product_meta_data = product_meta_data | append: " | " | append: product.metafields.custom["product_type"]
+          endif
+          assign product_meta_data = product_meta_data | remove_first: " | "
+        -%}
+        {%- if product_meta_data != "" -%}
+          <div class="ProductItem__type u-h8">
+            {{ product_meta_data }}
+          </div>
+        {%- endif -%} {% endcomment %}
 
         {%- if settings.show_product_rating -%}
           {%- unless use_horizontal -%}
@@ -328,7 +247,7 @@
           {%- endif -%}
         {%- endif -%}
 
-        {%- if show_price_on_hover == null -%}
+        {%- if show_price_on_hover == nil -%}
           {%- assign show_price_on_hover = settings.product_show_price_on_hover -%}
         {%- endif -%}
 
@@ -338,30 +257,22 @@
         {%- if product.template_suffix != 'coming-soon' -%}
           <div class="ProductItem__PriceList {% if show_price_on_hover %}ProductItem__PriceList--showOnHover{% endif %} Heading">
             {%- comment -%}
-              // 2023.9.12 Modify start
+              // 2023.9.12 Modify start 
               // 価格表示の制御
               // ①オープン価格表示の場合
               // ②【商品一覧・詳細ページ】価格に値がある場合
             {%- endcomment -%}
-            {%- if product.metafields.custom.open_price == true -%}
+            {%- if product.metafields.custom["open_price"] == true -%}
               <span class="ProductItem__Price Price Text--subdued u-h6">オープン価格</span>
-            {%- elsif product.metafields.custom.price != blank -%}
-              <span class="ProductItem__Price Price Text--subdued u-h6">{{- product.metafields.custom.price -}}</span>
+            {%- elsif product.metafields.custom["price"] != blank -%}
+              <span class="ProductItem__Price Price Text--subdued u-h6">{{- product.metafields.custom["price"] -}}</span>
             {%- elsif product.compare_at_price > product.price -%}
               {%- if settings.currency_code_enabled -%}
-                <span class="ProductItem__Price Price Price--highlight Text--subdued u-h6">
-                  {{- product.price | money_with_currency -}}
-                </span>
-                <span class="ProductItem__Price Price Price--compareAt Text--subdued">
-                  {{- product.compare_at_price | money_with_currency -}}
-                </span>
+                <span class="ProductItem__Price Price Price--highlight Text--subdued u-h6">{{ product.price | money_with_currency }}</span>
+                <span class="ProductItem__Price Price Price--compareAt Text--subdued">{{ product.compare_at_price | money_with_currency }}</span>
               {%- else -%}
-                <span class="ProductItem__Price Price Price--highlight Text--subdued u-h6">
-                  {{- product.price | money -}}
-                </span>
-                <span class="ProductItem__Price Price Price--compareAt Text--subdued">
-                  {{- product.compare_at_price | money -}}
-                </span>
+                <span class="ProductItem__Price Price Price--highlight Text--subdued u-h6">{{ product.price | money }}</span>
+                <span class="ProductItem__Price Price Price--compareAt Text--subdued">{{ product.compare_at_price | money }}</span>
               {%- endif -%}
             {%- elsif product.price_varies -%}
               {%- if settings.currency_code_enabled -%}
@@ -372,17 +283,10 @@
                 {%- capture formatted_max_price -%}{{ product.price_max | money }}{%- endcapture -%}
               {%- endif -%}
 
-              <span class="ProductItem__Price Price Text--subdued u-h6">
-                {{-
-                  'collection.product.from_price_html'
-                  | t: min_price: formatted_min_price, max_price: formatted_max_price
-                -}}
-              </span>
+              <span class="ProductItem__Price Price Text--subdued u-h6">{{ 'collection.product.from_price_html' | t: min_price: formatted_min_price, max_price: formatted_max_price }}</span>
             {%- else -%}
               {%- if settings.currency_code_enabled -%}
-                <span class="ProductItem__Price Price Text--subdued u-h6">
-                  {{- product.price | money_with_currency -}}
-                </span>
+                <span class="ProductItem__Price Price Text--subdued u-h6">{{ product.price | money_with_currency }}</span>
               {%- else -%}
                 <span class="ProductItem__Price Price Text--subdued u-h6">{{ product.price | money }}</span>
               {%- endif -%}
@@ -392,23 +296,14 @@
           {%- if product.selected_or_first_available_variant.unit_price_measurement -%}
             <div class="ProductItem__UnitPriceMeasurement">
               <div class="UnitPriceMeasurement Heading Text--subdued">
-                <span class="UnitPriceMeasurement__Price">
-                  {{- product.selected_or_first_available_variant.unit_price | money -}}
-                </span>
+                <span class="UnitPriceMeasurement__Price">{{ product.selected_or_first_available_variant.unit_price | money }}</span>
                 <span class="UnitPriceMeasurement__Separator">/ </span>
 
-                <span
-                  class="UnitPriceMeasurement__ReferenceValue"
-                  {%- if product.selected_or_first_available_variant.unit_price_measurement.reference_value == 1 -%}
-                    style="display: none"
-                  {% endif %}
-                >
+                <span class="UnitPriceMeasurement__ReferenceValue" {%- if product.selected_or_first_available_variant.unit_price_measurement.reference_value == 1 -%}style="display: none"{% endif %}>
                   {{- product.selected_or_first_available_variant.unit_price_measurement.reference_value -}}
                 </span>
 
-                <span class="UnitPriceMeasurement__ReferenceUnit">
-                  {{- product.selected_or_first_available_variant.unit_price_measurement.reference_unit -}}
-                </span>
+                <span class="UnitPriceMeasurement__ReferenceUnit">{{ product.selected_or_first_available_variant.unit_price_measurement.reference_unit }}</span>
               </div>
             </div>
           {%- endif -%}
@@ -422,9 +317,7 @@
   </div>
 
   {%- if use_horizontal -%}
-    <a href="{{ product.url }}" class="ProductItem__ViewButton Button Button--primary hidden-pocket">
-      {{- 'collection.product.view_product' | t -}}
-    </a>
+    <a href="{{ product.url }}" class="ProductItem__ViewButton Button Button--primary hidden-pocket">{{ 'collection.product.view_product' | t }}</a>
   {%- endif -%}
 </div>
 
@@ -455,6 +348,7 @@
       right: 3px;
     }
   }
+
 
   .CollectionInner__Products .swym-button.swym-add-to-wishlist-view-product.swym-heart {
     position: absolute;
@@ -498,7 +392,7 @@
   }
 
   .ProductItem__ImageWrapper .swym-add-to-wishlist-view-product:after {
-    color: #70706b !important;
+    color: #70706B !important;
     background: #fff;
     /* border: 1px solid #A6ADAF; */
     border-radius: 50%;
@@ -512,9 +406,10 @@
     }
   }
 
+
   .ProductItem__ImageWrapper .swym-added.swym-add-to-wishlist-view-product:after {
-    color: #468e7d !important;
-    background: #ffffff;
+    color: #468E7D !important;
+    background: #FFFFFF;
     opacity: 1;
   }
 
@@ -538,6 +433,7 @@
     }
   }
 
+
   .ProductItem__Info {
     margin-top: 0;
   }
@@ -545,4 +441,5 @@
   .ProductItem__Vendor {
     margin-bottom: 0;
   }
+
 </style>

@@ -432,19 +432,12 @@ HEADER CONTENT
               <a href="{{ routes.search_url }}" class="Heading Link Link--primary Text--subdued u-h8" data-action="toggle-search">{{ 'header.navigation.search' | t }}</a>
             </li>
 
-            {% comment %} <li class="HorizontalList__Item">
-                  <a href="#wishlist" class="Header__Icon Icon-Wrapper Icon-Wrapper--clickable">
-                    {%- render 'icon' with 'heart' -%}
-                    <span class="wishlist-header-counter"></span>
-                  </a>
-            </li> {% endcomment %}
-
             <li class="HorizontalList__Item">
-              <a href="/pages/wishlist-1" class="Header__Icon Icon-Wrapper Icon-Wrapper--clickable">
-                {%- render 'icon' with 'heart' -%}
-                <span class="wishlist-header-counter"></span>
-              </a>
-        </li>
+                  <a href="#swym-wishlist" class="swym-wishlist Header__Icon Icon-Wrapper Icon-Wrapper--clickable">
+                    {%- render 'icon' with 'heart' -%}
+                    <span class="swym-wishlist-header-counter"></span>
+                  </a>
+            </li>
 
             <li class="HorizontalList__Item" style="display: none;">
               <a href="{{ routes.cart_url }}" class="Heading u-h6" {% unless template == 'cart' or settings.cart_type == 'page' %}data-action="open-drawer" data-drawer-id="sidebar-cart" aria-label="{{ 'header.navigation.open_cart' | t }}"{% endunless %}>{{ 'header.navigation.cart' | t }} (<span class="Header__CartCount">{{ cart.item_count }}</span>)</a>
@@ -466,11 +459,9 @@ HEADER CONTENT
         <span class="hidden-phone">{%- render 'icon' with 'search-desktop' -%}</span>
       </a>
 
-      <a href="/pages/wishlist-1" class="wishlist Header__Icon Icon-Wrapper Icon-Wrapper--clickable">
+      <a href="#swym-wishlist" class="swym-wishlist Header__Icon Icon-Wrapper Icon-Wrapper--clickable">
         {%- render 'icon' with 'heart' -%}
-        <div class="badge-wrapper">
-        <span class="wishlist-header-counter"></span>
-        </div>
+        <span class="swym-wishlist-header-counter"></span>
       </a>
 
       {%- if shop.customer_accounts_enabled and section.settings.show_icons or use_sidebar_menu -%}

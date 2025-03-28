@@ -71,11 +71,11 @@
           </div>
         {%- endif -%}
 
-        <h1 class="Article__Title Heading u-h3 Heading_catch">{{ article.title }}</h1>
+        <h1 class="Article__Title Heading u-h3 Heading_catch article_title_custom">{{ article.title }}</h1>
       </header>
 
       <div class="Article__Body Rte">
-        {{ article.content }}
+        {{ article.content | replace: '<img', '<img class="article-img-width"'}}
       </div>
 
       {%- if section.settings.show_author and article.metafields.author.image != blank -%}

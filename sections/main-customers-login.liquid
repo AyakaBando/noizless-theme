@@ -9,6 +9,7 @@
         {%- endif -%}
       {%- endform -%}
 
+
       {%- comment -%}
         --------------------------------------------------------------------------------------------------------------------
         CUSTOMER LOGIN FORM
@@ -46,9 +47,9 @@
 
         <button type="submit" class="Form__Submit Button Button--primary Button--full">{{ 'customer.login.submit' | t }}</button>
 
-        <div class="Form__Hint Form__Hint--center">
+        <div class="Form__Hint Form__Hint--center" style="display: flex; justify-content: space-between;">
           <span class="Text--subdued">{{ 'customer.login.register_label' | t }}</span>
-          <a href="{{ routes.account_register_url }}" class="Link Link--secondary">{{ 'customer.login.register_link' | t }}</a>
+          <a href="{{ routes.account_register_url }}" class="Link Link--secondary" style="text-decoration:underline;">{{ 'customer.login.register_link' | t }}</a>
         </div>
       {%- endform -%}
 

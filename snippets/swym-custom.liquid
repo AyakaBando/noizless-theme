@@ -1,0 +1,84 @@
+<script defer>
+  const initWishlistButtons = (swat) => {
+    // コレクション読み込み時、お気に入り追加済みのアイテムがあれば着色(商品一覧ページ)
+    const productWishlistBtnOnCollectionList = document.querySelectorAll(".c-swym-button__open-modal");
+    if(productWishlistBtnOnCollectionList.length > 0) {
+      let onSuccess = function(lists) {
+        // リスト取得時、お気に入りアイテムをチェックし商品があるか確認
+        lists.forEach(list => {
+          let listcontents = list.listcontents;
+          listcontents.forEach(content => {
+            let contentBtnHTML = document.querySelector(`.c-swym-button__open-modal[data-product_id="${content.empi}"]`);
+            if(contentBtnHTML) contentBtnHTML.classList.add('swym-added');
+          });
+        });
+      }
+
+      let onError = function(error) {
+        console.log("Error while fetching all Lists", error);
+      }
+
+      // Call `fetchLists` function
+      swat.fetchLists({
+        callbackFn: onSuccess,
+        errorFn: onError
+      });
+    };
+  }
+
+  function swymCallbackFn(swat){
+    initWishlistButtons(swat);
+    // コレクション読み込み時
+    document.addEventListener("swym:collections-loaded", function(){
+      swat.initializeActionButtons(".boost-pfs-filter-products");
+      initWishlistButtons(swat);
+    });
+
+    // お気に入りに追加時、該当のお気に入りボタンを着色(商品一覧のページ)
+    let listenerAdded = function(e) {
+      var data = e.detail.d;
+      var productId = data.empi;
+      const productWishlistBtnOnCollectionList = document.querySelector(`.c-swym-button__open-modal[data-product_id="${productId}"]`);
+      if(productWishlistBtnOnCollectionList) productWishlistBtnOnCollectionList.classList.add('swym-added');
+    };
+    swat.evtLayer.addEventListener('sw:addedtowishlist', listenerAdded);
+
+    // お気に入り削除時、商品Variant全てにお気に入りがなければお気に入りボタンを色抜き
+    let listenerRemove = function(e) {
+      var data = e.detail.d;
+      var productId = data.empi;
+      const productWishlistBtnOnCollectionList = document.querySelector(`.c-swym-button__open-modal[data-product_id="${productId}"]`);
+
+      if(productWishlistBtnOnCollectionList){
+        let onSuccess = function(lists) {
+          // リスト取得時、お気に入りアイテムをチェックし商品があるか確認
+          let productInWishlistFlg = false;
+          for (let i = 0; i < lists.length; i++){
+            let sameProductItem = lists[i].listcontents.find(item => item.empi === productId);
+            if (sameProductItem){
+              productInWishlistFlg = true;
+            }
+          }
+          if(productInWishlistFlg === false) productWishlistBtnOnCollectionList.classList.remove('swym-added');
+        }
+  
+        let onError = function(error) {
+          console.log("Error while fetching all Lists", error);
+        }
+  
+        // Call `fetchLists` function
+        swat.fetchLists({
+          callbackFn: onSuccess,
+          errorFn: onError
+        });
+      }
+
+    };
+    swat.evtLayer.addEventListener('sw:removedfromwishlist', listenerRemove);
+  }
+  if(!window.SwymCallbacks){
+    window.SwymCallbacks = [];
+  }
+  window.SwymCallbacks.push(swymCallbackFn);
+
+</script>

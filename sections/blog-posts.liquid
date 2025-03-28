@@ -22,6 +22,7 @@
 
     {%- assign is_first_article_featured = false -%}
 
+     {%- assign is_first_article_featured = section.settings.show_featured_article -%}
     {%- if section.settings.show_featured_article -%}
       {%- assign is_first_article_featured = true -%}
     {% endif %}
@@ -37,7 +38,7 @@
               {%- assign article = articles[block.settings[article_option]] -%}
 
               {%- unless article == empty -%}
-                <div class="Grid__Cell {% if is_first_article_featured and forloop.first %}c-Is-First{% else %}1/2--tablet 1/3--lap-and-up{% endif %} {% if forloop.index == 4 %}hidden-tablet{% endif %}">
+                <div class="Grid__Cell {% if is_first_article_featured and forloop.first %}c-Is-First{% else %}1/2--tablet 1/3--lap-and-up{% endif %}  {% if forloop.index == 4 %}hidden-tablet{% endif %}">
                   {%- render 'article-item', block: block, article: article, is_first_article_featured:is_first_article_featured ,forloop_first:forloop.first -%}
                 </div>
 
@@ -49,7 +50,7 @@
             {%- assign blog = blogs[block.settings.blog] -%}
 
             {%- for article in blog.articles limit: 4 -%}
-              <div class="Grid__Cell {% if is_first_article_featured and forloop.first %}c-Is-First{% else %}1/2--tablet 1/3--lap-and-up{% endif %} {% if forloop.index == 4 %}hidden-tablet{% endif %}">
+              <div class="Grid__Cell {% if is_first_article_featured and forloop.first %}c-Is-First{% else %}1/2--tablet 1/3--lap-and-up{% endif %} {% if forloop.index > 3 %}hidden-tablet hidden-mobile {% unless is_first_article_featured %}blogDisplayNone{% endunless %}{% endif %}">
                 {%- render 'article-item', block: block, article: article, is_first_article_featured:is_first_article_featured ,forloop_first:forloop.first -%}
               </div>
 
@@ -59,7 +60,7 @@
 
         {%- if show_placeholders -%}
           {%- for i in (1..4) -%}
-            <div class="Grid__Cell {% if is_first_article_featured and forloop.first %}c-Is-First{% else %}1/2--tablet 1/3--lap-and-up{% endif %} {% if forloop.index == 4 %}hidden-tablet{% endif %}">
+            <div class="Grid__Cell {% if is_first_article_featured and forloop.first %}c-Is-First{% else %}1/2--tablet 1/3--lap-and-up{% endif %} {% if forloop.index > 3 %}hidden-tablet hidden-mobile{% endif %}">
               <article class="ArticleItem">
                 {%- capture placeholder -%}{% cycle 'lifestyle-1', 'lifestyle-2' %}{%- endcapture -%}
 
@@ -102,6 +103,12 @@
     display: flex;
     justify-content: space-between;
     margin-bottom: 13px;
+  }
+
+  @media screen and (max-width: 640px) {
+  .hidden-mobile {
+    display: none !important;
+  }
   }
 </style>
 
